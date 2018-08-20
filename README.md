@@ -74,6 +74,9 @@ Base64!
     var_dump($r->decode($jwtStr));
 ```
 
+The `PrivateKey` parameter is optional. Do not specify it if you only want to
+verify JWTs. Of course, you need to specify it when you want to sign a JWT.
+
 ## HS256
 
 ```php
