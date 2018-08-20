@@ -29,6 +29,7 @@ use fkooman\JWT\Keys\PrivateKey;
 use fkooman\JWT\Keys\PublicKey;
 use fkooman\JWT\Keys\SymmetricKey;
 use fkooman\JWT\RS256;
+use ParagonIE\ConstantTime\Base64;
 
 try {
     // RS256
@@ -41,7 +42,7 @@ try {
 
     // HS256
     $h = new HS256(
-        new SymmetricKey(\random_bytes(32))
+        new SymmetricKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ='))
     );
     $jwtStr = $h->encode(['foo' => 'bar']);
     \var_export($h->decode($jwtStr));
