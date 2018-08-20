@@ -19,16 +19,14 @@ directly. You have to know which token algorithm you expect before verifying
 it.
 
 **NOTE**: this is not a complete JWT implementation. It is NOT compliant with
-the specification, but does work.
+the specification, nor aims to be, but does work.
 
-**NOTE**: currently claim validity is not checked, i.e. `exp` is not verified.
+# TODO
 
-**NOTE**: currently it does not support the `crit` JWT header key, which is a 
-potential security problem... I guess we have to parse the header anyway, 
-check if there is a `crit` key and then reject the token... We do not want
-to support crappy extensions, it is bad enough as it is.
-
-It doesn't seem many implementations support `crit`?
+* check `exp` and maybe `nbf`? if it is set in the JWT when verifying to make
+  sure the JWT is (still) valid;
+* implement check for `crit` JWT header and throw exception when it occurs, 
+  we do NOT want to deal with this mess.
 
 # Why?
 
