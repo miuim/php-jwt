@@ -33,7 +33,7 @@ use fkooman\JWT\RS256;
 try {
     // RS256
     $r = new RS256(
-        new PublicKey(\file_get_contents(__DIR__.'/jwt.crt')),
+        new PublicKey(\file_get_contents(__DIR__.'/jwt.pub')),
         new PrivateKey(\file_get_contents(__DIR__.'/jwt.key'))
     );
     $jwtStr = $r->encode(['foo' => 'bar']);

@@ -41,22 +41,19 @@ algorithm and key. No discovery, no attacks.
 
 ## RS256 (RSA)
 
-This will generate a self signed certificate you can use with JWT. It will 
-write the certificate to `jwt.crt` and the private key to `jwt.key`.
-
 ```bash
-    $ openssl req \
-        -nodes \
-        -subj "/CN=JWT Key" \
-        -x509 \
-        -sha256 \
-        -newkey rsa:2048 \
-        -keyout jwt.key \
-        -out jwt.crt \
-        -days 1440
+    $ openssl genrsa --out jwt.key
+    $ openssl rsa -in jwt.key -pubout -out jwt.pub
 ```
 
-**TODO**: don't bother with X.509, only generate private key and public key
+To inspect a public key:
+
+```bash
+    $ openssl rsa -pubin -in jwt.pub -noout -text
+```
+
+This will generate a private key in `jwt.key` and the public key in `jwt.pub`.
+Those files can be used with `PublicKey` and `PrivateKey`.
 
 ## HS256 (HMAC)
 
