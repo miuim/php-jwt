@@ -24,6 +24,7 @@
 
 namespace fkooman\JWT;
 
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;
 
 class Util
@@ -62,5 +63,22 @@ class Util
         }
 
         return $jsonData;
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return string
+     */
+    public static function encodeUnpadded($str)
+    {
+        // For encodeUnpadded we need paragonie/constant_time_encoding
+        // >= 1.0.3, >= 2.2.0
+        // Ubuntu 18.04: php-constant-time (2.2.0-1) [universe]
+        // Fedora 28: php-paragonie-constant-time-encoding-2.2.2-4.fc28
+        // Debian 9: php-constant-time (2.0.3-1)
+        // CentOS: php-paragonie-constant-time-encoding-1.0.3-1.el7
+        // return Base64UrlSafe::encodeUnpadded($str);
+        return \rtrim(Base64UrlSafe::encode($str), '=');
     }
 }

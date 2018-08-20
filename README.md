@@ -53,13 +53,27 @@ Those files can be used with `PublicKey` and `PrivateKey`.
 
 ## HS256 (HMAC)
 
-```bash
-    $ php -r 'echo base64_encode(random_bytes(32)) . PHP_EOL';
+You can use the PHP function `random_bytes(32)` to generate a key. It MUST be 
+32 bytes long (256 bits), the `SymmetricKey` function will reject any other 
+length.
+
+```php
+    $symmetricKey = new SymmetricKey(random_bytes(32));
 ```
 
-**NOTE** you need to feed the key to the `SymmetricKey` class as a 32 byte 
-(256 bits) string, so decode it before using it if you encoded it as e.g. 
-Base64!
+If you want to store this key, other than in its binary form, you can use for
+example Base64 encoding. Make sure you use a "constant time" implementation 
+when loading a key from somewhere, e.g.:
+
+```php
+    use ParagonIE\ConstantTime\Base64;
+    
+    $encodedKey = Base64::encode(random_bytes(32));
+    
+    // ...
+
+    $symmetricKey = new SymmetricKey(Base64::decode($encodedKey));
+```
 
 # API
 
@@ -67,7 +81,10 @@ Base64!
 
 ```php
     
-    $r = new RS256(new PublicKey('jwt.crt'), new PrivateKey('jwt.key'));
+    $r = new RS256(
+        new PublicKey(file_get_contents('jwt.crt')),
+        new PrivateKey(file_get_contents('jwt.key'))
+    );
     $jwtStr = $r->encode(['foo' => 'bar']);
     var_dump($r->decode($jwtStr));
 ```

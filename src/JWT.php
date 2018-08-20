@@ -40,9 +40,9 @@ abstract class JWT
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
-        $jwtHeader = Base64UrlSafe::encodeUnpadded(Util::encodeJson($headerData));
-        $jwtPayload = Base64UrlSafe::encodeUnpadded(Util::encodeJson($jsonData));
-        $jwtSignature = Base64UrlSafe::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
+        $jwtHeader = Util::encodeUnpadded(Util::encodeJson($headerData));
+        $jwtPayload = Util::encodeUnpadded(Util::encodeJson($jsonData));
+        $jwtSignature = Util::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
 
         return $jwtHeader.'.'.$jwtPayload.'.'.$jwtSignature;
     }
