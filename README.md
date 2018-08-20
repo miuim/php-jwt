@@ -12,7 +12,7 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 * Only supports `RS256` and `HS256` through separate classes;
 * All keys are validated before use to make sure they are of the correct 
   format;
-* No header parsing;
+* Does NOT support the `crit` header key, token validation will fail;
 
 There is no "algorithm" toggle. You use either the `HS256` or `RS256` class
 directly. You have to know which token algorithm you expect before verifying 
@@ -25,8 +25,6 @@ the specification, nor aims to be, but does work.
 
 * check `exp` and maybe `nbf`? if it is set in the JWT when verifying to make
   sure the JWT is (still) valid;
-* implement check for `crit` JWT header and throw exception when it occurs, 
-  we do NOT want to deal with this mess.
 
 # Why?
 

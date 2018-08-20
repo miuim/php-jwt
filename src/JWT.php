@@ -58,7 +58,10 @@ abstract class JWT
         if (3 !== \count($jwtParts)) {
             throw new JWTException('JWT: invalid JWT token');
         }
-        // we do not care what is in the header, verify "as is"
+        $jwtHeaderData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[0]));
+        if (\array_key_exists('crit', $jwtHeaderData)) {
+            throw new JWTException('"crit" header key not supported');
+        }
         if (false === $this->verify($jwtParts[0].'.'.$jwtParts[1], Base64UrlSafe::decode($jwtParts[2]))) {
             throw new JWTException('JWT: invalid signature');
         }
