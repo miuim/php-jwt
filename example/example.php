@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-require_once 'vendor/autoload.php';
+require_once \dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\JWT\HS256;
 use fkooman\JWT\Keys\PrivateKey;
