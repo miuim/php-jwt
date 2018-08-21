@@ -28,6 +28,10 @@ use DateTime;
 use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
+/**
+ * The base class that MUST be extended by the classes that actually implement
+ * the signing/verifying, e.g. HS256 and RS256.
+ */
 abstract class Jwt
 {
     /** @var null|\DateTime */
@@ -52,6 +56,9 @@ abstract class Jwt
     }
 
     /**
+     * Override the "DateTime" for unit testing. Do NOT use this in your
+     * application.
+     *
      * @param \DateTime $dateTime
      *
      * @return void
