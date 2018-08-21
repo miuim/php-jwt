@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT;
+namespace fkooman\Jwt;
 
-use fkooman\JWT\Keys\SymmetricKey;
+use fkooman\Jwt\Keys\SymmetricKey;
 
-class HS256 extends JWT
+class HS256 extends Jwt
 {
     const JWT_ALGORITHM = 'HS256';
 

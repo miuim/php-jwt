@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT\Exception;
+namespace fkooman\Jwt\Exception;
 
 use Exception;
 
-class JWTException extends Exception
+class JwtException extends Exception
 {
 }

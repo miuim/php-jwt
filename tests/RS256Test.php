@@ -24,9 +24,10 @@
 
 namespace fkooman\Jose\Tests;
 
-use fkooman\JWT\Keys\PrivateKey;
-use fkooman\JWT\Keys\PublicKey;
-use fkooman\JWT\RS256;
+use DateTime;
+use fkooman\Jwt\Keys\PrivateKey;
+use fkooman\Jwt\Keys\PublicKey;
+use fkooman\Jwt\RS256;
 use PHPUnit\Framework\TestCase;
 
 class RS256Test extends TestCase
@@ -86,6 +87,7 @@ WwIDAQAB
         $r = new RS256(
             $publicKey
         );
+        $r->setDateTime(new DateTime('@1534756800'));
         $jwtStr = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXV0aC5kYXRhcG9ydGVuLm5vIiwiYXVkIjoiNjVlMGE2MDktNzcwZC00ODk5LTlhMTYtYzUwMDkxNTQyZTE2Iiwic3ViIjoiNTVkZTdkNzEtNGEyNS00MTAzLThlNDMtMzVkZjhjMmQ0NzJhIiwiaWF0IjoxNTM0NzUzMjgzLCJleHAiOjE1MzQ3NTY4ODMsImF1dGhfdGltZSI6MTUzNDc1MzI4MX0.i3OLSrRl3hiEHoH7X7aceOHI7-UVj-G9L554hz1cC1jcCgsWlFTILHvDTKA6Qt2wy4gSE6TMotnjuJePt5ZnMllwwESIyCdSF3YQjF-A8Fz-DOKP24iyVmPgYuFMZ_m8gqKn0TaVTEcy5MOPncvPj53v0Zhr8VyxBY39qA9Gbbzvhhns72lWuhePNx6QLxoeEQx3UVQd6fNlXRj5cmgGGUOYNZ-_wDFmGbigC2mBlFQvs7Hhu6wAB2LLN16Fcc2Q6rXJ6CXJVuZQDqulLvxNGnOSrTOQxPTG1b8tbEdN1skhphqVDBSh0ZP1bnTwNhaB98IdKjkU2DTFqsKSCmrAmg';
         $payloadData = [
             'iss' => 'https://auth.dataporten.no',

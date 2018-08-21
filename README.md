@@ -28,7 +28,7 @@ the specification, nor aims to be, but does work.
 
 # Why?
 
-JWT is [insecure](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid).
+JWT can be [insecure](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid).
 In order to solve some of the issues we wrote a library that does not even 
 parse the JWT header. It will directly verify the signature with the chosen 
 algorithm and key. No discovery, no attacks.

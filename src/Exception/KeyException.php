@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT\Exception;
+namespace fkooman\Jwt\Exception;
 
 use Exception;
 

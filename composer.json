@@ -7,12 +7,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "fkooman\\JWT\\": "src/"
+            "fkooman\\Jwt\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "fkooman\\JWT\\Tests\\": "tests/"
+            "fkooman\\Jwt\\Tests\\": "tests/"
         }
     },
     "description": "JWT Library",

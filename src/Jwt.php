@@ -22,13 +22,17 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT;
+namespace fkooman\Jwt;
 
-use fkooman\JWT\Exception\JWTException;
+use DateTime;
+use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
-abstract class JWT
+abstract class Jwt
 {
+    /** @var null|\DateTime */
+    protected $dateTime = null;
+
     /**
      * @param array $jsonData
      *
@@ -48,6 +52,16 @@ abstract class JWT
     }
 
     /**
+     * @param \DateTime $dateTime
+     *
+     * @return void
+     */
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
+    }
+
+    /**
      * @param string $jwtStr
      *
      * @return array
@@ -56,18 +70,19 @@ abstract class JWT
     {
         $jwtParts = \explode('.', $jwtStr);
         if (3 !== \count($jwtParts)) {
-            throw new JWTException('JWT: invalid JWT token');
+            throw new JwtException('invalid JWT token');
         }
         $jwtHeaderData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[0]));
         if (\array_key_exists('crit', $jwtHeaderData)) {
-            throw new JWTException('"crit" header key not supported');
+            throw new JwtException('"crit" header key not supported');
         }
         if (false === $this->verify($jwtParts[0].'.'.$jwtParts[1], Base64UrlSafe::decode($jwtParts[2]))) {
-            throw new JWTException('JWT: invalid signature');
+            throw new JwtException('invalid signature');
         }
+        $payloadData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[1]));
+        $this->checkExpiry($payloadData);
 
-        // now we have a valid signed JWT, so let's continue
-        return Util::decodeJson(Base64UrlSafe::decode($jwtParts[1]));
+        return $payloadData;
     }
 
     /**
@@ -84,4 +99,22 @@ abstract class JWT
      * @return bool
      */
     abstract protected function verify($inputStr, $signatureIn);
+
+    /**
+     * @param array $payloadData
+     *
+     * @return void
+     */
+    private function checkExpiry(array $payloadData)
+    {
+        if (\array_key_exists('exp', $payloadData)) {
+            if (!\is_int($payloadData['exp'])) {
+                throw new JwtException('"exp" not an integer');
+            }
+            $dateTime = null !== $this->dateTime ? $this->dateTime : new DateTime();
+            if ($dateTime->getTimestamp() > $payloadData['exp']) {
+                throw new JwtException('expired JWT token');
+            }
+        }
+    }
 }

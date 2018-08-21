@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT;
+namespace fkooman\Jwt;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;

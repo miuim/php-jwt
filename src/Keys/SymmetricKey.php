@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT\Keys;
+namespace fkooman\Jwt\Keys;
 
-use fkooman\JWT\Exception\KeyException;
+use fkooman\Jwt\Exception\KeyException;
 use ParagonIE\ConstantTime\Binary;
 
 class SymmetricKey

@@ -24,11 +24,11 @@
 
 require_once \dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\JWT\HS256;
-use fkooman\JWT\Keys\PrivateKey;
-use fkooman\JWT\Keys\PublicKey;
-use fkooman\JWT\Keys\SymmetricKey;
-use fkooman\JWT\RS256;
+use fkooman\Jwt\HS256;
+use fkooman\Jwt\Keys\PrivateKey;
+use fkooman\Jwt\Keys\PublicKey;
+use fkooman\Jwt\Keys\SymmetricKey;
+use fkooman\Jwt\RS256;
 use ParagonIE\ConstantTime\Base64;
 
 try {

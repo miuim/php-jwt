@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-namespace fkooman\JWT;
+namespace fkooman\Jwt;
 
-use fkooman\JWT\Exception\JWTException;
-use fkooman\JWT\Keys\PrivateKey;
-use fkooman\JWT\Keys\PublicKey;
+use fkooman\Jwt\Exception\JwtException;
+use fkooman\Jwt\Keys\PrivateKey;
+use fkooman\Jwt\Keys\PublicKey;
 use RuntimeException;
 
-class RS256 extends JWT
+class RS256 extends Jwt
 {
     const JWT_ALGORITHM = 'RS256';
 
@@ -57,7 +57,7 @@ class RS256 extends JWT
     protected function sign($inputStr)
     {
         if (null === $this->privateKey) {
-            throw new JWTException('private key not set');
+            throw new JwtException('private key not set');
         }
         $signatureOut = '';
         if (false === \openssl_sign($inputStr, $signatureOut, $this->privateKey->getKey(), OPENSSL_ALGO_SHA256)) {

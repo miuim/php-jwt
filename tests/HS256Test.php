@@ -24,8 +24,8 @@
 
 namespace fkooman\Jose\Tests;
 
-use fkooman\JWT\HS256;
-use fkooman\JWT\Keys\SymmetricKey;
+use fkooman\Jwt\HS256;
+use fkooman\Jwt\Keys\SymmetricKey;
 use PHPUnit\Framework\TestCase;
 
 class HS256Test extends TestCase
