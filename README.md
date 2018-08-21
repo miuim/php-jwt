@@ -21,11 +21,6 @@ it.
 **NOTE**: this is not a complete JWT implementation. It is NOT compliant with
 the specification, nor aims to be, but does work.
 
-# TODO
-
-* check `exp` and maybe `nbf`? if it is set in the JWT when verifying to make
-  sure the JWT is (still) valid;
-
 # Why?
 
 JWT can be [insecure](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid).
