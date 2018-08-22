@@ -38,17 +38,17 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 ## RS256 (RSA)
 
 ```bash
-    $ openssl genrsa --out jwt.key
-    $ openssl rsa -in jwt.key -pubout -out jwt.pub
+    $ openssl genrsa --out rsa.key
+    $ openssl rsa -in rsa.key -pubout -out rsa.pub
 ```
 
-This will generate a private key in `jwt.key` and the public key in `jwt.pub`.
+This will generate a private key in `rsa.key` and the public key in `rsa.pub`.
 Those files can be used with `PublicKey` and `PrivateKey`.
 
 To inspect a public key:
 
 ```bash
-    $ openssl rsa -pubin -in jwt.pub -noout -text
+    $ openssl rsa -pubin -in rsa.pub -noout -text
 ```
 
 ## HS256 (HMAC)
@@ -75,8 +75,8 @@ saving keys. Do NOT use any other means to generate keys!
     <?php
 
     $r = new RS256(
-        PublicKey::load('jwt.crt'),
-        PrivateKey::load('jwt.key')
+        PublicKey::load('rsa.pub'),
+        PrivateKey::load('rsa.key')
     );
     $jwtStr = $r->encode(['foo' => 'bar']);
     var_dump($r->decode($jwtStr));

@@ -38,8 +38,8 @@ try {
 
     // RS256
     $r = new RS256(
-        PublicKey::load(__DIR__.'/jwt.pub'),
-        PrivateKey::load(__DIR__.'/jwt.key')
+        PublicKey::load(__DIR__.'/rsa.pub'),
+        PrivateKey::load(__DIR__.'/rsa.key')
     );
     $jwtStr = $r->encode($claimList);
     echo 'RS256: '.$jwtStr.PHP_EOL;
