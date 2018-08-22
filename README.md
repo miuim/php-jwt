@@ -94,3 +94,22 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
 ```
+
+# Generating a JWKS
+
+The following PHP script can be used to generate a JSON Web Key Set.
+
+```php
+    <?php
+    $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public(file_get_contents('example/jwt.pub')));
+
+    $jsonData = [
+        'keys' => [
+            [
+                'kty' => 'RSA',
+                'n' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['n'])), '='),
+                'e' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['e'])), '='),
+            ],
+        ],
+    ];
+```
