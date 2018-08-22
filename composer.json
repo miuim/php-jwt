@@ -15,7 +15,7 @@
             "fkooman\\Jwt\\Tests\\": "tests/"
         }
     },
-    "description": "JWT Library",
+    "description": "Simple and Secure JWT Signer/Verifier",
     "license": "MIT",
     "name": "fkooman/jwt",
     "require": {
@@ -24,6 +24,7 @@
         "ext-openssl": "*",
         "ext-spl": "*",
         "paragonie/constant_time_encoding": "^1|^2",
+        "paragonie/random_compat": ">=1",
         "php": ">= 5.4",
         "symfony/polyfill-php56": "^1"
     },
