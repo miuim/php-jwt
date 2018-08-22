@@ -1,9 +1,7 @@
 # Introduction
 
-**NOTE**: this is a WIP!
-
-This is small and secure JWT implementation. It supports `HS256` and `RS256` 
-only as those seem to be the most widely deploy JWT algorithms.
+This is small and secure JWT implementation. It only supports `HS256` and 
+`RS256` as those seem to be the most widely deployed JWT signature algorithms.
 
 # What?
 
@@ -21,7 +19,7 @@ directly. You have to know which token algorithm you expect before verifying
 it.
 
 **NOTE**: this is not a complete JWT implementation. It is NOT compliant with
-the specification, nor aims to be, but does work.
+the specification, nor aims to be, but it does work.
 
 # Why?
 
