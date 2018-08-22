@@ -24,9 +24,9 @@ the specification, nor aims to be, but does work.
 # Why?
 
 JWT can be [insecure](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid).
-In order to solve some of the issues we wrote a library that does not even 
-parse the JWT header. It will directly verify the signature with the chosen 
-algorithm and key. No discovery, no attacks.
+In order to solve some of the issues we wrote a library that solves some of 
+these problems. It will directly verify the signature with the chosen algorithm 
+and key, and not check the header to see which algorithm was used.
 
 # Keys
 
@@ -45,6 +45,28 @@ To inspect a public key:
 
 This will generate a private key in `jwt.key` and the public key in `jwt.pub`.
 Those files can be used with `PublicKey` and `PrivateKey`.
+
+### JWK
+
+Use the following script to generate a JWK (set) from your public key for use
+with e.g. OpenID Connect:
+
+```php
+    <?php
+    $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public(file_get_contents('example/jwt.pub')));
+
+    $jsonData = [
+        'keys' => [
+            [
+                'kty' => 'RSA',
+                'n' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['n'])), '='),
+                'e' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['e'])), '='),
+            ],
+        ],
+    ];
+
+    echo json_encode($jsonData, JSON_PRETTY_PRINT).PHP_EOL;
+```
 
 ## HS256 (HMAC)
 
@@ -93,25 +115,4 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
     $h = new HS256(new SymmetricKey(random_bytes(32)));
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
-```
-
-# Generating a JWKS
-
-The following PHP script can be used to generate a JSON Web Key Set.
-
-```php
-    <?php
-    $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public(file_get_contents('example/jwt.pub')));
-
-    $jsonData = [
-        'keys' => [
-            [
-                'kty' => 'RSA',
-                'n' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['n'])), '='),
-                'e' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['e'])), '='),
-            ],
-        ],
-    ];
-
-    echo json_encode($jsonData, JSON_PRETTY_PRINT).PHP_EOL;
 ```
