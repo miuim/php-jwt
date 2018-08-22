@@ -25,6 +25,7 @@
 namespace fkooman\Jwt\Keys;
 
 use fkooman\Jwt\Exception\KeyException;
+use RuntimeException;
 
 class PrivateKey
 {
@@ -47,6 +48,23 @@ class PrivateKey
             throw new KeyException('not an RSA key');
         }
         $this->privateKey = $privateKey;
+    }
+
+    /**
+     * @param string $fileName
+     *
+     * @return self
+     */
+    public static function load($fileName)
+    {
+        // https://github.com/vimeo/psalm/issues/570
+        /** @var false|string */
+        $fileData = @\file_get_contents($fileName);
+        if (false === $fileData) {
+            throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
+        }
+
+        return new self($fileData);
     }
 
     /**

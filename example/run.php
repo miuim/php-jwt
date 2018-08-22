@@ -29,7 +29,6 @@ use fkooman\Jwt\Keys\PrivateKey;
 use fkooman\Jwt\Keys\PublicKey;
 use fkooman\Jwt\Keys\SymmetricKey;
 use fkooman\Jwt\RS256;
-use ParagonIE\ConstantTime\Base64;
 
 try {
     $claimList = [
@@ -39,8 +38,8 @@ try {
 
     // RS256
     $r = new RS256(
-        new PublicKey(\file_get_contents(__DIR__.'/jwt.pub')),
-        new PrivateKey(\file_get_contents(__DIR__.'/jwt.key'))
+        PublicKey::load(__DIR__.'/jwt.pub'),
+        PrivateKey::load(__DIR__.'/jwt.key')
     );
     $jwtStr = $r->encode($claimList);
     echo 'RS256: '.$jwtStr.PHP_EOL;
@@ -50,7 +49,7 @@ try {
 
     // HS256
     $h = new HS256(
-        new SymmetricKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ='))
+        SymmetricKey::load(__DIR__.'/secret.key')
     );
     $jwtStr = $h->encode($claimList);
     echo 'HS256: '.$jwtStr.PHP_EOL;
