@@ -54,6 +54,7 @@ with e.g. OpenID Connect:
 
 ```php
     <?php
+
     $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public(file_get_contents('example/jwt.pub')));
 
     $jsonData = [
@@ -76,6 +77,8 @@ You can use the PHP function `random_bytes(32)` to generate a key. It MUST be
 length.
 
 ```php
+    <?php
+
     $symmetricKey = new SymmetricKey(random_bytes(32));
 ```
 
@@ -84,6 +87,8 @@ example Base64 encoding. Make sure you use a "constant time" implementation
 when loading a key from somewhere, e.g.:
 
 ```php
+    <?php
+
     use ParagonIE\ConstantTime\Base64;
     
     $encodedKey = Base64::encode(random_bytes(32));
@@ -98,7 +103,8 @@ when loading a key from somewhere, e.g.:
 ## RS256
 
 ```php
-    
+    <?php
+
     $r = new RS256(
         new PublicKey(file_get_contents('jwt.crt')),
         new PrivateKey(file_get_contents('jwt.key'))
@@ -113,6 +119,8 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
 ## HS256
 
 ```php
+    <?php
+
     $h = new HS256(new SymmetricKey(random_bytes(32)));
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
