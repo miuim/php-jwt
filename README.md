@@ -14,6 +14,7 @@ A secure JWT library for generating and verifying JSON Web Tokens:
   format;
 * Does NOT support the `crit` header key, token validation will fail;
 * Does NOT support encryption, that's a lost cause with JWE;
+* Verifies the `exp` payload field to make sure the token is not expired;
 
 There is no "algorithm" toggle. You use either the `HS256` or `RS256` class
 directly. You have to know which token algorithm you expect before verifying 
@@ -46,29 +47,6 @@ To inspect a public key:
 
 This will generate a private key in `jwt.key` and the public key in `jwt.pub`.
 Those files can be used with `PublicKey` and `PrivateKey`.
-
-### JWK
-
-Use the following script to generate a JWK (set) from your public key for use
-with e.g. OpenID Connect:
-
-```php
-    <?php
-
-    $keyInfo = openssl_pkey_get_details(openssl_pkey_get_public(file_get_contents('example/jwt.pub')));
-
-    $jsonData = [
-        'keys' => [
-            [
-                'kty' => 'RSA',
-                'n' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['n'])), '='),
-                'e' => rtrim(str_replace(['+', '/'], ['-', '_'], base64_encode($keyInfo['rsa']['e'])), '='),
-            ],
-        ],
-    ];
-
-    echo json_encode($jsonData, JSON_PRETTY_PRINT).PHP_EOL;
-```
 
 ## HS256 (HMAC)
 
