@@ -112,4 +112,6 @@ The following PHP script can be used to generate a JSON Web Key Set.
             ],
         ],
     ];
+
+    echo json_encode($jsonData, JSON_PRETTY_PRINT).PHP_EOL;
 ```
