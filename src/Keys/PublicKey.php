@@ -39,6 +39,13 @@ class PublicKey
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
             throw new KeyException('invalid public key');
         }
+        /* @var false|array<string,int|array<string,string>> */
+        if (false === $keyInfo = \openssl_pkey_get_details($publicKey)) {
+            throw new KeyException('unable to get key information');
+        }
+        if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
+            throw new KeyException('not an RSA key');
+        }
         $this->publicKey = $publicKey;
     }
 

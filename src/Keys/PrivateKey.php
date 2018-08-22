@@ -39,6 +39,13 @@ class PrivateKey
         if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
             throw new KeyException('invalid private key');
         }
+        /* @var false|array<string,int|array<string,string>> */
+        if (false === $keyInfo = \openssl_pkey_get_details($privateKey)) {
+            throw new KeyException('unable to get key information');
+        }
+        if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
+            throw new KeyException('not an RSA key');
+        }
         $this->privateKey = $privateKey;
     }
 
