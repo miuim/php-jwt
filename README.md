@@ -13,6 +13,7 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 * All keys are validated before use to make sure they are of the correct 
   format;
 * Does NOT support the `crit` header key, token validation will fail;
+* Does NOT support encryption, that's a lost cause with JWE;
 
 There is no "algorithm" toggle. You use either the `HS256` or `RS256` class
 directly. You have to know which token algorithm you expect before verifying 
