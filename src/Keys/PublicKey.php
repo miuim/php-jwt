@@ -25,18 +25,11 @@
 namespace fkooman\Jwt\Keys;
 
 use fkooman\Jwt\Exception\KeyException;
-use fkooman\Jwt\Util;
 
 class PublicKey
 {
     /** @var resource */
     private $publicKey;
-
-    /** @var string */
-    private $e;
-
-    /** @var string */
-    private $n;
 
     /**
      * @param string $publicKeyStr
@@ -46,18 +39,6 @@ class PublicKey
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
             throw new KeyException('invalid public key');
         }
-
-        /* @var false|array<string,int|array<string,string>> */
-        if (false === $keyDetails = \openssl_pkey_get_details($publicKey)) {
-            throw new KeyException('unable to get public key details');
-        }
-        if (OPENSSL_KEYTYPE_RSA !== $keyDetails['type']) {
-            throw new KeyException('not an RSA key');
-        }
-        /** @var array<string,string> */
-        $rsaInfo = $keyDetails['rsa'];
-        $this->e = $rsaInfo['e'];
-        $this->n = $rsaInfo['n'];
         $this->publicKey = $publicKey;
     }
 
@@ -67,23 +48,5 @@ class PublicKey
     public function getKey()
     {
         return $this->publicKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJwkSet()
-    {
-        return Util::encodeJson(
-            [
-                'keys' => [
-                    [
-                        'kty' => 'RSA',
-                        'n' => Util::encodeUnpadded($this->n),
-                        'e' => Util::encodeUnpadded($this->e),
-                    ],
-                ],
-            ]
-        );
     }
 }
