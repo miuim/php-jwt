@@ -28,22 +28,22 @@ use fkooman\Jwt\Exception\KeyException;
 use ParagonIE\ConstantTime\Binary;
 use RuntimeException;
 
-class SymmetricKey
+class SecretKey
 {
     const KEY_LENGTH_BYTES = 32;
 
     /** @var string */
-    private $symmetricKey;
+    private $secretKey;
 
     /**
-     * @param string $symmetricKey
+     * @param string $secretKey
      */
-    public function __construct($symmetricKey)
+    public function __construct($secretKey)
     {
-        if (32 !== Binary::safeStrlen($symmetricKey)) {
+        if (32 !== Binary::safeStrlen($secretKey)) {
             throw new KeyException('invalid key length');
         }
-        $this->symmetricKey = $symmetricKey;
+        $this->secretKey = $secretKey;
     }
 
     /**
@@ -88,6 +88,6 @@ class SymmetricKey
      */
     public function getKey()
     {
-        return $this->symmetricKey;
+        return $this->secretKey;
     }
 }

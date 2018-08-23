@@ -25,14 +25,14 @@
 namespace fkooman\Jose\Tests;
 
 use fkooman\Jwt\HS256;
-use fkooman\Jwt\Keys\SymmetricKey;
+use fkooman\Jwt\Keys\SecretKey;
 use PHPUnit\Framework\TestCase;
 
 class HS256Test extends TestCase
 {
     public function testSimple()
     {
-        $h = new HS256(new SymmetricKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
         $jwtStr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8CymvZz4_nrhKF9cO2y4yo3UmDJ30QiuidJvLlH_0Is';
         $payloadData = [
               'sub' => '1234567890',

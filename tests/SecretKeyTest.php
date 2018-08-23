@@ -24,17 +24,17 @@
 
 namespace fkooman\Jose\Tests;
 
-use fkooman\Jwt\Keys\SymmetricKey;
+use fkooman\Jwt\Keys\SecretKey;
 use PHPUnit\Framework\TestCase;
 
-class SymmetricKeyTest extends TestCase
+class SecretKeyTest extends TestCase
 {
     public function testGenerateSaveLoad()
     {
         $tmpNam = \tempnam(\sys_get_temp_dir(), 'php-jwt');
-        $symKey = SymmetricKey::generate();
-        $symKey->save($tmpNam);
-        $loadedSymKey = SymmetricKey::load($tmpNam);
-        $this->assertSame($symKey->getKey(), $loadedSymKey->getKey());
+        $secretKey = SecretKey::generate();
+        $secretKey->save($tmpNam);
+        $loadedSecretKey = SecretKey::load($tmpNam);
+        $this->assertSame($secretKey->getKey(), $loadedSecretKey->getKey());
     }
 }

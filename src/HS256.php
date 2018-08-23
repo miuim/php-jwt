@@ -24,21 +24,21 @@
 
 namespace fkooman\Jwt;
 
-use fkooman\Jwt\Keys\SymmetricKey;
+use fkooman\Jwt\Keys\SecretKey;
 
 class HS256 extends Jwt
 {
     const JWT_ALGORITHM = 'HS256';
 
-    /** @var Keys\SymmetricKey */
-    private $symmetricKey;
+    /** @var Keys\SecretKey */
+    private $secretKey;
 
     /**
-     * @param Keys\SymmetricKey $symmetricKey
+     * @param Keys\SecretKey $secretKey
      */
-    public function __construct(SymmetricKey $symmetricKey)
+    public function __construct(SecretKey $secretKey)
     {
-        $this->symmetricKey = $symmetricKey;
+        $this->secretKey = $secretKey;
     }
 
     /**
@@ -48,7 +48,7 @@ class HS256 extends Jwt
      */
     protected function sign($inputStr)
     {
-        return \hash_hmac('sha256', $inputStr, $this->symmetricKey->getKey(), true);
+        return \hash_hmac('sha256', $inputStr, $this->secretKey->getKey(), true);
     }
 
     /**

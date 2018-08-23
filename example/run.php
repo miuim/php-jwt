@@ -27,7 +27,7 @@ require_once \dirname(__DIR__).'/vendor/autoload.php';
 use fkooman\Jwt\HS256;
 use fkooman\Jwt\Keys\PrivateKey;
 use fkooman\Jwt\Keys\PublicKey;
-use fkooman\Jwt\Keys\SymmetricKey;
+use fkooman\Jwt\Keys\SecretKey;
 use fkooman\Jwt\RS256;
 
 try {
@@ -49,7 +49,7 @@ try {
 
     // HS256
     $h = new HS256(
-        SymmetricKey::load(__DIR__.'/secret.key')
+        SecretKey::load(__DIR__.'/secret.key')
     );
     $jwtStr = $h->encode($claimList);
     echo 'HS256: '.$jwtStr.PHP_EOL;

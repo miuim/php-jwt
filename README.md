@@ -60,11 +60,11 @@ saving keys. Do NOT use any other means to generate keys!
     <?php
 
     // generating and saving a key
-    $symKey = SymmetricKey::generate();
-    $symKey->save('secret.key');
+    $secretKey = SecretKey::generate();
+    $secretKey->save('secret.key');
 
     // loading a key
-    $symKey = SymmetricKey::load('secret.key');
+    $secretKey = SecretKey::load('secret.key');
 ```
 
 # API
@@ -90,7 +90,7 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
 ```php
     <?php
 
-    $h = new HS256(SymmetricKey::load('secret.key'));
+    $h = new HS256(SecretKey::load('secret.key'));
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
 ```
