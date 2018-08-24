@@ -1,11 +1,17 @@
 # Introduction
 
 This is small and secure JSON Web Token implementation. It only supports 
-signatures with the `HS256` and `RS256` algorithm as those seem to be the most 
-widely deployed JWT signature algorithms. It does _NOT_ support encryption. 
+the following signatures types:
 
-Needless to say, this library is _NOT_ fully compliant with the JWT 
-specification.
+- `HS256` (`HMAC` using `SHA-256`)
+- `RS256` (`RSASSA-PKCS1-v1_5` using `SHA-256`)
+
+These seem to be the most widely deployed JWT signature algorithms. The library 
+does _NOT_ support encryption/decryption. Needless to say, this library is 
+_NOT_ fully compliant with the JWT specification.
+
+Unfortunately, some OpenID Connect Providers only support `RS256`. If you have 
+a choice, use `HS256`, possibly with the client secret as the shared secret.
 
 # Why?
 
