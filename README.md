@@ -44,12 +44,13 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 ## RS256 (RSA)
 
 ```bash
-    $ openssl genrsa --out rsa.key
+    $ openssl genrsa --out rsa.key 2048
     $ openssl rsa -in rsa.key -pubout -out rsa.pub
 ```
 
-This will generate a private key in `rsa.key` and the public key in `rsa.pub`.
-Those files can be used with `PublicKey` and `PrivateKey`.
+The RSA key MUST have [at least](https://tools.ietf.org/html/rfc7518#section-4.2)
+2048 bits. This will generate a private key in `rsa.key` and the public key in 
+`rsa.pub`. Those files can be used with `PublicKey` and `PrivateKey`.
 
 To inspect a public key:
 

@@ -25,6 +25,7 @@
 namespace fkooman\Jwt\Keys;
 
 use fkooman\Jwt\Exception\KeyException;
+use ParagonIE\ConstantTime\Binary;
 use RuntimeException;
 
 class PrivateKey
@@ -46,6 +47,13 @@ class PrivateKey
         }
         if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
             throw new KeyException('not an RSA key');
+        }
+        /** @var array<string,string> */
+        $rsaInfo = $keyInfo['rsa'];
+        // RSA key MUST be at least 2048 bits
+        // @see https://tools.ietf.org/html/rfc7518#section-4.2
+        if (256 > Binary::safeStrlen($rsaInfo['n'])) {
+            throw new KeyException('invalid RSA key');
         }
         $this->privateKey = $privateKey;
     }
