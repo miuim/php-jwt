@@ -36,8 +36,8 @@ A secure JWT library for generating and verifying JSON Web Tokens:
   rejected;
 * Does NOT support encryption, encryption with the algorithms specified is a 
   lost cause;
-* Verifies the `exp` payload field if present to make sure the token is not 
-  expired;
+* Verifies the `exp` and `nbf` payload field if present to make sure the token 
+  is valid.
 
 # Keys
 
