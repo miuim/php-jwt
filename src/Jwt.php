@@ -87,7 +87,7 @@ abstract class Jwt
             throw new JwtException('invalid signature');
         }
         $payloadData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[1]));
-        $this->checkExpiry($payloadData);
+        $this->checkToken($payloadData);
 
         return $payloadData;
     }
@@ -108,19 +108,33 @@ abstract class Jwt
     abstract protected function verify($inputStr, $signatureIn);
 
     /**
+     * Verify the "exp" and "nbf" keys iff they are set.
+     *
      * @param array $payloadData
      *
      * @return void
      */
-    private function checkExpiry(array $payloadData)
+    private function checkToken(array $payloadData)
     {
+        $dateTime = null !== $this->dateTime ? $this->dateTime : new DateTime();
+
+        // exp
         if (\array_key_exists('exp', $payloadData)) {
             if (!\is_int($payloadData['exp'])) {
                 throw new JwtException('"exp" not an integer');
             }
-            $dateTime = null !== $this->dateTime ? $this->dateTime : new DateTime();
-            if ($dateTime->getTimestamp() > $payloadData['exp']) {
-                throw new JwtException('expired JWT token');
+            if ($dateTime->getTimestamp() >= $payloadData['exp']) {
+                throw new JwtException('token no longer valid');
+            }
+        }
+
+        // nbf
+        if (\array_key_exists('nbf', $payloadData)) {
+            if (!\is_int($payloadData['nbf'])) {
+                throw new JwtException('"nbf" not an integer');
+            }
+            if ($dateTime->getTimestamp() < $payloadData['nbf']) {
+                throw new JwtException('token not yet valid');
             }
         }
     }
