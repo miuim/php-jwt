@@ -80,6 +80,12 @@ abstract class Jwt
             throw new JwtException('invalid JWT token');
         }
         $jwtHeaderData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[0]));
+        if (!\array_key_exists('alg', $jwtHeaderData)) {
+            throw new JwtException('"alg" header missing');
+        }
+        if (static::JWT_ALGORITHM !== $jwtHeaderData['alg']) {
+            throw new JwtException('unexpected "alg" value');
+        }
         if (\array_key_exists('crit', $jwtHeaderData)) {
             throw new JwtException('"crit" header key not supported');
         }
