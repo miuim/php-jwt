@@ -10,9 +10,6 @@ These seem to be the most widely deployed JWT signature algorithms. The library
 does _NOT_ support encryption/decryption. Needless to say, this library is 
 _NOT_ fully compliant with the JWT specification.
 
-Unfortunately, some OpenID Connect Providers only support `RS256`. If you have 
-a choice, use `HS256`, possibly with the client secret as the shared secret.
-
 # Why?
 
 Quite a number of JWT implementations exist for PHP, varying in quality. 
