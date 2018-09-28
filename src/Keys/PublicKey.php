@@ -26,6 +26,7 @@ namespace fkooman\Jwt\Keys;
 
 use fkooman\Jwt\Exception\KeyException;
 use RuntimeException;
+use TypeError;
 
 class PublicKey
 {
@@ -34,9 +35,13 @@ class PublicKey
 
     /**
      * @param string $publicKeyStr
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function __construct($publicKeyStr)
     {
+        if (!\is_string($publicKeyStr)) {
+            throw new TypeError('argument 1 must be string');
+        }
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
             throw new KeyException('invalid public key');
         }
@@ -54,11 +59,13 @@ class PublicKey
      * @param string $fileName
      *
      * @return self
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public static function load($fileName)
     {
-        // https://github.com/vimeo/psalm/issues/570
-        /** @var false|string */
+        if (!\is_string($fileName)) {
+            throw new TypeError('argument 1 must be string');
+        }
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {
             throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));

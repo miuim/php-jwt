@@ -27,6 +27,7 @@ namespace fkooman\Jwt\Keys;
 use fkooman\Jwt\Exception\KeyException;
 use ParagonIE\ConstantTime\Binary;
 use RuntimeException;
+use TypeError;
 
 class SecretKey
 {
@@ -37,9 +38,13 @@ class SecretKey
 
     /**
      * @param string $secretKey
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function __construct($secretKey)
     {
+        if (!\is_string($secretKey)) {
+            throw new TypeError('argument 1 must be string');
+        }
         if (32 !== Binary::safeStrlen($secretKey)) {
             throw new KeyException('invalid key length');
         }
@@ -58,11 +63,13 @@ class SecretKey
      * @param string $fileName
      *
      * @return self
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public static function load($fileName)
     {
-        // https://github.com/vimeo/psalm/issues/570
-        /** @var false|string */
+        if (!\is_string($fileName)) {
+            throw new TypeError('argument 1 must be string');
+        }
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {
             throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
@@ -75,9 +82,13 @@ class SecretKey
      * @param string $fileName
      *
      * @return void
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function save($fileName)
     {
+        if (!\is_string($fileName)) {
+            throw new TypeError('argument 1 must be string');
+        }
         if (false === @\file_put_contents($fileName, $this->getKey())) {
             throw new RuntimeException(\sprintf('unable to write key file "%s"', $fileName));
         }

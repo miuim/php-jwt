@@ -24,21 +24,21 @@
 
 namespace fkooman\Jwt;
 
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use RuntimeException;
+use fkooman\Jwt\Exception\JsonException;
+use TypeError;
 
-class Util
+class Json
 {
     /**
      * @param array $jsonData
      *
      * @return string
      */
-    public static function encodeJson(array $jsonData)
+    public static function encode(array $jsonData)
     {
         $jsonString = \json_encode($jsonData);
-        if (false === $jsonString) {
-            throw new RuntimeException('JSON: encode error');
+        if (false === $jsonString || 'null' === $jsonString) {
+            throw new JsonException('unable to encode');
         }
 
         return $jsonString;
@@ -48,37 +48,24 @@ class Util
      * @param string $jsonString
      *
      * @return array
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public static function decodeJson($jsonString)
+    public static function decode($jsonString)
     {
+        if (!\is_string($jsonString)) {
+            throw new TypeError('argument 1 must be string');
+        }
         /** @psalm-suppress MixedAssignment */
         $jsonData = \json_decode($jsonString, true);
         if (null === $jsonData) {
             if (JSON_ERROR_NONE !== \json_last_error()) {
-                throw new RuntimeException('JSON: decode error');
+                throw new JsonException('unable to decode');
             }
         }
         if (!\is_array($jsonData)) {
-            throw new RuntimeException('JSON: not a JSON object');
+            throw new JsonException('not a JSON object');
         }
 
         return $jsonData;
-    }
-
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
-    public static function encodeUnpadded($str)
-    {
-        // For encodeUnpadded we need paragonie/constant_time_encoding
-        // >= 1.0.3, >= 2.2.0
-        // Ubuntu 18.04: php-constant-time (2.2.0-1) [universe]
-        // Fedora 28: php-paragonie-constant-time-encoding-2.2.2-4.fc28
-        // Debian 9: php-constant-time (2.0.3-1)
-        // CentOS: php-paragonie-constant-time-encoding-1.0.3-1.el7
-        // return Base64UrlSafe::encodeUnpadded($str);
-        return \rtrim(Base64UrlSafe::encode($str), '=');
     }
 }

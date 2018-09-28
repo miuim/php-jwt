@@ -27,6 +27,7 @@ namespace fkooman\Jwt;
 use DateTime;
 use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use TypeError;
 
 /**
  * The base class that MUST be extended by the classes that actually implement
@@ -48,9 +49,9 @@ abstract class Jwt
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
-        $jwtHeader = Util::encodeUnpadded(Util::encodeJson($headerData));
-        $jwtPayload = Util::encodeUnpadded(Util::encodeJson($jsonData));
-        $jwtSignature = Util::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
+        $jwtHeader = Base64UrlSafe::encodeUnpadded(Json::encode($headerData));
+        $jwtPayload = Base64UrlSafe::encodeUnpadded(Json::encode($jsonData));
+        $jwtSignature = Base64UrlSafe::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
 
         return $jwtHeader.'.'.$jwtPayload.'.'.$jwtSignature;
     }
@@ -72,14 +73,18 @@ abstract class Jwt
      * @param string $jwtStr
      *
      * @return array
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function decode($jwtStr)
     {
+        if (!\is_string($jwtStr)) {
+            throw new TypeError('argument 1 must be string');
+        }
         $jwtParts = \explode('.', $jwtStr);
         if (3 !== \count($jwtParts)) {
             throw new JwtException('invalid JWT token');
         }
-        $jwtHeaderData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[0]));
+        $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtParts[0]));
         if (!\array_key_exists('alg', $jwtHeaderData)) {
             throw new JwtException('"alg" header missing');
         }
@@ -92,7 +97,7 @@ abstract class Jwt
         if (false === $this->verify($jwtParts[0].'.'.$jwtParts[1], Base64UrlSafe::decode($jwtParts[2]))) {
             throw new JwtException('invalid signature');
         }
-        $payloadData = Util::decodeJson(Base64UrlSafe::decode($jwtParts[1]));
+        $payloadData = Json::decode(Base64UrlSafe::decode($jwtParts[1]));
         $this->checkToken($payloadData);
 
         return $payloadData;
