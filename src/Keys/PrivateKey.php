@@ -58,7 +58,7 @@ class PrivateKey
         // RSA key MUST be at least 2048 bits
         // @see https://tools.ietf.org/html/rfc7518#section-4.2
         if (256 > Binary::safeStrlen($rsaInfo['n'])) {
-            throw new KeyException('invalid RSA key');
+            throw new KeyException('invalid RSA key, must be >= 2048 bits');
         }
         $this->privateKey = $privateKey;
     }
