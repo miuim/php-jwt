@@ -65,10 +65,10 @@ saving keys. Do NOT use any other means to generate keys!
 
     // generating and saving a key
     $secretKey = SecretKey::generate();
-    $secretKey->save('secret.key');
+    $encodedString = $secretKey->encode();
 
     // loading a key
-    $secretKey = SecretKey::load('secret.key');
+    $secretKey = SecretKey::fromEncodedString($encodedString);
 ```
 
 # API
@@ -94,7 +94,7 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
 ```php
     <?php
 
-    $h = new HS256(SecretKey::load('secret.key'));
+    $h = new HS256(SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps'));
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
 ```

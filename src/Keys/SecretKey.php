@@ -25,8 +25,8 @@
 namespace fkooman\Jwt\Keys;
 
 use fkooman\Jwt\Exception\KeyException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
-use RuntimeException;
 use TypeError;
 
 class SecretKey
@@ -60,38 +60,26 @@ class SecretKey
     }
 
     /**
-     * @param string $fileName
+     * @return string
+     */
+    public function encode()
+    {
+        return Base64UrlSafe::encodeUnpadded($this->secretKey);
+    }
+
+    /**
+     * @param string $encodedKey
      *
      * @return self
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public static function load($fileName)
+    public static function fromEncodedString($encodedKey)
     {
-        if (!\is_string($fileName)) {
+        if (!\is_string($encodedKey)) {
             throw new TypeError('argument 1 must be string');
         }
-        $fileData = @\file_get_contents($fileName);
-        if (false === $fileData) {
-            throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
-        }
 
-        return new self($fileData);
-    }
-
-    /**
-     * @param string $fileName
-     *
-     * @return void
-     * @psalm-suppress RedundantConditionGivenDocblockType
-     */
-    public function save($fileName)
-    {
-        if (!\is_string($fileName)) {
-            throw new TypeError('argument 1 must be string');
-        }
-        if (false === @\file_put_contents($fileName, $this->getKey())) {
-            throw new RuntimeException(\sprintf('unable to write key file "%s"', $fileName));
-        }
+        return new self(Base64UrlSafe::decode($encodedKey));
     }
 
     /**

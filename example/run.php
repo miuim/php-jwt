@@ -49,7 +49,7 @@ try {
 
     // HS256
     $h = new HS256(
-        SecretKey::load(__DIR__.'/secret.key')
+        SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
     );
     $jwtStr = $h->encode($claimList);
     echo 'HS256: '.$jwtStr.PHP_EOL;

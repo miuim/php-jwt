@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jose\Tests;
+namespace fkooman\Jose\Tests\Keys;
 
 use fkooman\Jwt\Keys\SecretKey;
 use PHPUnit\Framework\TestCase;
 
 class SecretKeyTest extends TestCase
 {
-    public function testGenerateSaveLoad()
+    public function testGenerate()
     {
-        $tmpNam = \tempnam(\sys_get_temp_dir(), 'php-jwt');
         $secretKey = SecretKey::generate();
-        $secretKey->save($tmpNam);
-        $loadedSecretKey = SecretKey::load($tmpNam);
-        $this->assertSame($secretKey->getKey(), $loadedSecretKey->getKey());
+        $encodedKey = $secretKey->encode();
+        $this->assertSame(
+            $encodedKey,
+            SecretKey::fromEncodedString($encodedKey)->encode()
+        );
     }
 }
