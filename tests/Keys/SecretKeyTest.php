@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jose\Tests\Keys;
+namespace fkooman\Jwt\Tests\Keys;
 
 use fkooman\Jwt\Keys\SecretKey;
 use PHPUnit\Framework\TestCase;

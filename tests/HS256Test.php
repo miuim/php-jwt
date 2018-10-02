@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jose\Tests;
+namespace fkooman\Jwt\Tests;
 
 use fkooman\Jwt\HS256;
 use fkooman\Jwt\Keys\SecretKey;

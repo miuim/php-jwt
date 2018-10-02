@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jose\Tests;
+namespace fkooman\Jwt\Tests;
 
 use DateTime;
 use fkooman\Jwt\Keys\PrivateKey;
