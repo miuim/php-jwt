@@ -31,7 +31,8 @@ use TypeError;
 
 class SecretKey
 {
-    const KEY_LENGTH_BYTES = 32;
+    /** @var int */
+    const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
 
     /** @var string */
     private $secretKey;

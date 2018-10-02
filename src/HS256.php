@@ -29,6 +29,7 @@ use TypeError;
 
 class HS256 extends Jwt
 {
+    /** @var string */
     const JWT_ALGORITHM = 'HS256';
 
     /** @var Keys\SecretKey */

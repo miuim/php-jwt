@@ -32,6 +32,7 @@ use TypeError;
 
 class RS256 extends Jwt
 {
+    /** @var string */
     const JWT_ALGORITHM = 'RS256';
 
     /** @var Keys\PublicKey */
