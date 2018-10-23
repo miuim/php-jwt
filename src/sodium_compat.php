@@ -97,3 +97,17 @@ if (!\is_callable('sodium_crypto_sign_seed_keypair')) {
         return \Sodium\crypto_sign_seed_keypair($seed);
     }
 }
+
+if (!\is_callable('sodium_crypto_sign_verify_detached')) {
+    /**
+     * @param string $signature
+     * @param string $message
+     * @param string $pk
+     *
+     * @return bool
+     */
+    function sodium_crypto_sign_verify_detached($signature, $message, $pk)
+    {
+        return \Sodium\crypto_sign_verify_detached($signature, $message, $pk);
+    }
+}
