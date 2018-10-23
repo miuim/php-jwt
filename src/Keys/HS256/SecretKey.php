@@ -62,6 +62,20 @@ class SecretKey
     /**
      * @return string
      */
+    public function getKeyId()
+    {
+        return Base64UrlSafe::encodeUnpadded(
+            \hash(
+                'sha256',
+                $this->raw(),
+                true
+            )
+        );
+    }
+
+    /**
+     * @return string
+     */
     public function encode()
     {
         return Base64UrlSafe::encodeUnpadded($this->secretKey);

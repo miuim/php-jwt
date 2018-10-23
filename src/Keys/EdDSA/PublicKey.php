@@ -73,7 +73,7 @@ class PublicKey
     /**
      * @return string
      */
-    public function getKid()
+    public function getKeyId()
     {
         return Base64UrlSafe::encodeUnpadded(
             \hash(

@@ -39,20 +39,20 @@ abstract class Jwt
     protected $dateTime = null;
 
     /**
-     * @param array  $jsonData
-     * @param string $keyId
+     * @param array $jsonData
+     * @param bool  $addKeyId
      *
      * @return string
      */
-    public function encode(array $jsonData, $keyId = null)
+    public function encode(array $jsonData, $addKeyId = false)
     {
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
 
-        if (null !== $keyId) {
-            $headerData['kid'] = $keyId;
+        if ($addKeyId) {
+            $headerData['kid'] = $this->getKeyId();
         }
 
         $jwtHeader = Base64UrlSafe::encodeUnpadded(Json::encode($headerData));
@@ -117,6 +117,11 @@ abstract class Jwt
 
         return $jwtHeaderData['kid'];
     }
+
+    /**
+     * @return null|string
+     */
+    abstract protected function getKeyId();
 
     /**
      * @param string $inputStr

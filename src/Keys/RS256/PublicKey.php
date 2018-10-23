@@ -25,6 +25,7 @@
 namespace fkooman\Jwt\Keys\RS256;
 
 use fkooman\Jwt\Exception\KeyException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;
 use TypeError;
 
@@ -32,6 +33,9 @@ class PublicKey
 {
     /** @var resource */
     private $publicKey;
+
+    /** @var string */
+    private $rsaMod;
 
     /**
      * @param string $publicKeyStr
@@ -51,7 +55,24 @@ class PublicKey
         if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
             throw new KeyException('not an RSA key');
         }
+        /** @var array<string,string> */
+        $rsaInfo = $keyInfo['rsa'];
+        $this->rsaMod = $rsaInfo['n'];
         $this->publicKey = $publicKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyId()
+    {
+        return Base64UrlSafe::encodeUnpadded(
+            \hash(
+                'sha256',
+                $this->rsaMod,
+                true
+            )
+        );
     }
 
     /**
