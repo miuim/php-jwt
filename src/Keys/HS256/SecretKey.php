@@ -84,7 +84,7 @@ class SecretKey
     /**
      * @return string
      */
-    public function getKey()
+    public function raw()
     {
         return $this->secretKey;
     }

@@ -54,7 +54,7 @@ class HS256 extends Jwt
             throw new TypeError('argument 1 must be string');
         }
 
-        return \hash_hmac('sha256', $inputStr, $this->secretKey->getKey(), true);
+        return \hash_hmac('sha256', $inputStr, $this->secretKey->raw(), true);
     }
 
     /**
