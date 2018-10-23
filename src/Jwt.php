@@ -39,16 +39,22 @@ abstract class Jwt
     protected $dateTime = null;
 
     /**
-     * @param array $jsonData
+     * @param array  $jsonData
+     * @param string $keyId
      *
      * @return string
      */
-    public function encode(array $jsonData)
+    public function encode(array $jsonData, $keyId = null)
     {
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
+
+        if (null !== $keyId) {
+            $headerData['kid'] = $keyId;
+        }
+
         $jwtHeader = Base64UrlSafe::encodeUnpadded(Json::encode($headerData));
         $jwtPayload = Base64UrlSafe::encodeUnpadded(Json::encode($jsonData));
         $jwtSignature = Base64UrlSafe::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
@@ -79,20 +85,8 @@ abstract class Jwt
         if (!\is_string($jwtStr)) {
             throw new TypeError('argument 1 must be string');
         }
-        $jwtParts = \explode('.', $jwtStr);
-        if (3 !== \count($jwtParts)) {
-            throw new JwtException('invalid JWT token');
-        }
-        $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtParts[0]));
-        if (!\array_key_exists('alg', $jwtHeaderData)) {
-            throw new JwtException('"alg" header key missing');
-        }
-        if (static::JWT_ALGORITHM !== $jwtHeaderData['alg']) {
-            throw new JwtException('unexpected "alg" value');
-        }
-        if (\array_key_exists('crit', $jwtHeaderData)) {
-            throw new JwtException('"crit" header key not supported');
-        }
+        $jwtParts = self::parseToken($jwtStr);
+        self::validateHeader($jwtParts[0]);
         if (false === $this->verify($jwtParts[0].'.'.$jwtParts[1], Base64UrlSafe::decode($jwtParts[2]))) {
             throw new JwtException('invalid signature');
         }
@@ -100,6 +94,28 @@ abstract class Jwt
         $this->checkToken($payloadData);
 
         return $payloadData;
+    }
+
+    /**
+     * @param string $jwtStr
+     *
+     * @return null|string
+     */
+    public static function getKid($jwtStr)
+    {
+        if (!\is_string($jwtStr)) {
+            throw new TypeError('argument 1 must be string');
+        }
+        $jwtParts = self::parseToken($jwtStr);
+        $jwtHeaderData = self::validateHeader($jwtParts[0]);
+        if (!\array_key_exists('kid', $jwtHeaderData)) {
+            return null;
+        }
+        if (!\is_string($jwtHeaderData['kid'])) {
+            throw new JwtException('"kid" value must be string');
+        }
+
+        return $jwtHeaderData['kid'];
     }
 
     /**
@@ -116,6 +132,42 @@ abstract class Jwt
      * @return bool
      */
     abstract protected function verify($inputStr, $signatureIn);
+
+    /**
+     * @param string $jwtStr
+     *
+     * @return array<string>
+     */
+    private static function parseToken($jwtStr)
+    {
+        $jwtParts = \explode('.', $jwtStr);
+        if (3 !== \count($jwtParts)) {
+            throw new JwtException('invalid JWT token');
+        }
+
+        return $jwtParts;
+    }
+
+    /**
+     * @param string $jwtHeaderStr
+     *
+     * @return array
+     */
+    private static function validateHeader($jwtHeaderStr)
+    {
+        $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtHeaderStr));
+        if (!\array_key_exists('alg', $jwtHeaderData)) {
+            throw new JwtException('"alg" header key missing');
+        }
+        if (static::JWT_ALGORITHM !== $jwtHeaderData['alg']) {
+            throw new JwtException('unexpected "alg" value');
+        }
+        if (\array_key_exists('crit', $jwtHeaderData)) {
+            throw new JwtException('"crit" header key not supported');
+        }
+
+        return $jwtHeaderData;
+    }
 
     /**
      * Verify the "exp" and "nbf" keys iff they are set.
