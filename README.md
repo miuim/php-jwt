@@ -96,7 +96,7 @@ saving keys. Do NOT use any other means to generate keys!
 ```
 
 The public key can be obtained from the secret key by calling the 
-`getPublicKey` method on the secret key object.
+`getPublicKey` method on the `SecretKey` object.
 
 # API
 
@@ -122,20 +122,26 @@ verify JWTs. Of course, you need to specify it when you want to sign a JWT.
     <?php
 
     $h = new \fkooman\Jwt\HS256(
-        \fkooman\Jwt\Keys\HS256\SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
+        \fkooman\Jwt\Keys\HS256\SecretKey::fromEncodedString(
+            '5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps'
+        )
     );
     $jwtStr = $h->encode(['foo' => 'bar']);
     var_dump($h->decode($jwtStr));
 ```
 
-## EdDSA
+## EdDSA (Ed25519)
 
 ```php
     <?php
 
-    $secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::fromEncodedString('yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg');
+    $secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::fromEncodedString(
+        'yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg'
+    );
+    $publicKey = $secretKey->getPublicKey();
+
     $r = new \fkooman\Jwt\EdDSA(
-        $secretKey->getPublicKey(),
+        $publicKey,
         $secretKey
     );
     $jwtStr = $r->encode(['foo' => 'bar']);
