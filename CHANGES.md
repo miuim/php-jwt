@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 0.2.2 (2018-10-23)
+- add missing polyfill
+
 ## 0.2.1 (2018-10-23)
 - implement libsodium < 2 support
 
