@@ -20,6 +20,16 @@ means implementing the absolute minimum to support JWT, in a secure way.
 Simplicity and security is more important than fully supporting the 
 specification(s).
 
+# Requirements
+
+* PHP >= 5.4.8 
+* `php-hash` (for `HS256`)
+* `php-openssl` (for `RS256`)
+* `php-pecl-libsodium` or `php-sodium` (for `EdDSA`)
+
+On modern PHP versions only `paragonie/constant_time_encoding` is a dependency,
+on older versions a number of polyfills are used. See `composer.json`.
+
 # How?
 
 A secure JWT library for generating and verifying JSON Web Tokens:
