@@ -83,7 +83,7 @@ class PrivateKey
     /**
      * @return resource
      */
-    public function getKey()
+    public function raw()
     {
         return $this->privateKey;
     }

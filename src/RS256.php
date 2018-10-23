@@ -65,7 +65,7 @@ class RS256 extends Jwt
             throw new JwtException('private key not set');
         }
         $signatureOut = '';
-        if (false === \openssl_sign($inputStr, $signatureOut, $this->privateKey->getKey(), OPENSSL_ALGO_SHA256)) {
+        if (false === \openssl_sign($inputStr, $signatureOut, $this->privateKey->raw(), OPENSSL_ALGO_SHA256)) {
             throw new RuntimeException('OpenSSL: unable to sign');
         }
 
@@ -86,7 +86,7 @@ class RS256 extends Jwt
         if (!\is_string($signatureIn)) {
             throw new TypeError('argument 2 must be string');
         }
-        $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->getKey(), OPENSSL_ALGO_SHA256);
+        $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);
         if (1 === $verifyResult) {
             return true;
         }
