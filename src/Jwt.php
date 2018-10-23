@@ -40,18 +40,18 @@ abstract class Jwt
 
     /**
      * @param array $jsonData
-     * @param bool  $addKeyId
+     * @param bool  $addKeyIdToHeader
      *
      * @return string
      */
-    public function encode(array $jsonData, $addKeyId = false)
+    public function encode(array $jsonData, $addKeyIdToHeader = false)
     {
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
 
-        if ($addKeyId) {
+        if ($addKeyIdToHeader) {
             $headerData['kid'] = $this->getKeyId();
         }
 
