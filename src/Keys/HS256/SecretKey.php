@@ -22,56 +22,70 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jwt;
+namespace fkooman\Jwt\Keys\HS256;
 
-use fkooman\Jwt\Keys\HS256\SecretKey;
+use fkooman\Jwt\Exception\KeyException;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\ConstantTime\Binary;
 use TypeError;
 
-class HS256 extends Jwt
+class SecretKey
 {
-    /** @var string */
-    const JWT_ALGORITHM = 'HS256';
+    /** @var int */
+    const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
 
-    /** @var Keys\HS256\SecretKey */
+    /** @var string */
     private $secretKey;
 
     /**
-     * @param Keys\HS256\SecretKey $secretKey
+     * @param string $secretKey
      */
-    public function __construct(SecretKey $secretKey)
+    public function __construct($secretKey)
     {
+        if (!\is_string($secretKey)) {
+            throw new TypeError('argument 1 must be string');
+        }
+        if (32 !== Binary::safeStrlen($secretKey)) {
+            throw new KeyException('invalid key length');
+        }
         $this->secretKey = $secretKey;
     }
 
     /**
-     * @param string $inputStr
-     *
-     * @return string
+     * @return self
      */
-    protected function sign($inputStr)
+    public static function generate()
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
-        return \hash_hmac('sha256', $inputStr, $this->secretKey->getKey(), true);
+        return new self(\random_bytes(self::KEY_LENGTH_BYTES));
     }
 
     /**
-     * @param string $inputStr
-     * @param string $signatureIn
-     *
-     * @return bool
+     * @return string
      */
-    protected function verify($inputStr, $signatureIn)
+    public function encode()
     {
-        if (!\is_string($inputStr)) {
+        return Base64UrlSafe::encodeUnpadded($this->secretKey);
+    }
+
+    /**
+     * @param string $encodedKey
+     *
+     * @return self
+     */
+    public static function fromEncodedString($encodedKey)
+    {
+        if (!\is_string($encodedKey)) {
             throw new TypeError('argument 1 must be string');
         }
-        if (!\is_string($signatureIn)) {
-            throw new TypeError('argument 2 must be string');
-        }
 
-        return \hash_equals(self::sign($inputStr), $signatureIn);
+        return new self(Base64UrlSafe::decode($encodedKey));
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->secretKey;
     }
 }

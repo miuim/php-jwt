@@ -25,8 +25,8 @@
 namespace fkooman\Jwt;
 
 use fkooman\Jwt\Exception\JwtException;
-use fkooman\Jwt\Keys\PrivateKey;
-use fkooman\Jwt\Keys\PublicKey;
+use fkooman\Jwt\Keys\RS256\PrivateKey;
+use fkooman\Jwt\Keys\RS256\PublicKey;
 use RuntimeException;
 use TypeError;
 
@@ -35,15 +35,15 @@ class RS256 extends Jwt
     /** @var string */
     const JWT_ALGORITHM = 'RS256';
 
-    /** @var Keys\PublicKey */
+    /** @var Keys\RS256\PublicKey */
     private $publicKey;
 
-    /** @var null|Keys\PrivateKey */
+    /** @var null|Keys\RS256\PrivateKey */
     private $privateKey;
 
     /**
-     * @param Keys\PublicKey       $publicKey
-     * @param null|Keys\PrivateKey $privateKey
+     * @param Keys\RS256\PublicKey       $publicKey
+     * @param null|Keys\RS256\PrivateKey $privateKey
      */
     public function __construct(PublicKey $publicKey, PrivateKey $privateKey = null)
     {
@@ -55,7 +55,6 @@ class RS256 extends Jwt
      * @param string $inputStr
      *
      * @return string
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     protected function sign($inputStr)
     {
@@ -78,7 +77,6 @@ class RS256 extends Jwt
      * @param string $signatureIn
      *
      * @return bool
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     protected function verify($inputStr, $signatureIn)
     {

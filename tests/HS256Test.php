@@ -25,7 +25,7 @@
 namespace fkooman\Jwt\Tests;
 
 use fkooman\Jwt\HS256;
-use fkooman\Jwt\Keys\SecretKey;
+use fkooman\Jwt\Keys\HS256\SecretKey;
 use PHPUnit\Framework\TestCase;
 
 class HS256Test extends TestCase

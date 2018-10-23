@@ -48,7 +48,6 @@ class Json
      * @param string $jsonString
      *
      * @return array
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public static function decode($jsonString)
     {

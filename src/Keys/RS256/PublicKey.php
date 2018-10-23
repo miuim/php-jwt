@@ -22,52 +22,42 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jwt\Keys;
+namespace fkooman\Jwt\Keys\RS256;
 
 use fkooman\Jwt\Exception\KeyException;
-use ParagonIE\ConstantTime\Binary;
 use RuntimeException;
 use TypeError;
 
-class PrivateKey
+class PublicKey
 {
     /** @var resource */
-    private $privateKey;
+    private $publicKey;
 
     /**
-     * @param string $privateKeyStr
-     * @psalm-suppress RedundantConditionGivenDocblockType
+     * @param string $publicKeyStr
      */
-    public function __construct($privateKeyStr)
+    public function __construct($publicKeyStr)
     {
-        if (!\is_string($privateKeyStr)) {
+        if (!\is_string($publicKeyStr)) {
             throw new TypeError('argument 1 must be string');
         }
-        if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
-            throw new KeyException('invalid private key');
+        if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
+            throw new KeyException('invalid public key');
         }
         /* @var false|array<string,int|array<string,string>> */
-        if (false === $keyInfo = \openssl_pkey_get_details($privateKey)) {
+        if (false === $keyInfo = \openssl_pkey_get_details($publicKey)) {
             throw new KeyException('unable to get key information');
         }
         if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
             throw new KeyException('not an RSA key');
         }
-        /** @var array<string,string> */
-        $rsaInfo = $keyInfo['rsa'];
-        // RSA key MUST be at least 2048 bits
-        // @see https://tools.ietf.org/html/rfc7518#section-4.2
-        if (256 > Binary::safeStrlen($rsaInfo['n'])) {
-            throw new KeyException('invalid RSA key, must be >= 2048 bits');
-        }
-        $this->privateKey = $privateKey;
+        $this->publicKey = $publicKey;
     }
 
     /**
      * @param string $fileName
      *
      * @return self
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public static function load($fileName)
     {
@@ -87,6 +77,6 @@ class PrivateKey
      */
     public function getKey()
     {
-        return $this->privateKey;
+        return $this->publicKey;
     }
 }

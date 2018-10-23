@@ -22,42 +22,30 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jwt\Keys;
+namespace fkooman\Jwt\Keys\EdDSA;
 
-use fkooman\Jwt\Exception\KeyException;
+use LengthException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
 use TypeError;
 
-class SecretKey
+class PublicKey
 {
-    /** @var int */
-    const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
-
     /** @var string */
-    private $secretKey;
+    private $publicKey;
 
     /**
-     * @param string $secretKey
-     * @psalm-suppress RedundantConditionGivenDocblockType
+     * @param string $publicKey
      */
-    public function __construct($secretKey)
+    public function __construct($publicKey)
     {
-        if (!\is_string($secretKey)) {
+        if (!\is_string($publicKey)) {
             throw new TypeError('argument 1 must be string');
         }
-        if (32 !== Binary::safeStrlen($secretKey)) {
-            throw new KeyException('invalid key length');
+        if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
+            throw new LengthException('invalid public key length');
         }
-        $this->secretKey = $secretKey;
-    }
-
-    /**
-     * @return self
-     */
-    public static function generate()
-    {
-        return new self(\random_bytes(self::KEY_LENGTH_BYTES));
+        $this->publicKey = $publicKey;
     }
 
     /**
@@ -65,29 +53,42 @@ class SecretKey
      */
     public function encode()
     {
-        return Base64UrlSafe::encodeUnpadded($this->secretKey);
+        return Base64UrlSafe::encodeUnpadded($this->publicKey);
     }
 
     /**
-     * @param string $encodedKey
+     * @param string $encodedString
      *
      * @return self
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public static function fromEncodedString($encodedKey)
+    public static function fromEncodedString($encodedString)
     {
-        if (!\is_string($encodedKey)) {
+        if (!\is_string($encodedString)) {
             throw new TypeError('argument 1 must be string');
         }
 
-        return new self(Base64UrlSafe::decode($encodedKey));
+        return new self(Base64UrlSafe::decode($encodedString));
     }
 
     /**
      * @return string
      */
-    public function getKey()
+    public function getKid()
     {
-        return $this->secretKey;
+        return Base64UrlSafe::encodeUnpadded(
+            \hash(
+                'sha256',
+                $this->raw(),
+                true
+            )
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function raw()
+    {
+        return $this->publicKey;
     }
 }

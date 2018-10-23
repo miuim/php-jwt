@@ -24,10 +24,12 @@
 
 require_once \dirname(__DIR__).'/vendor/autoload.php';
 
+use fkooman\Jwt\EdDSA;
 use fkooman\Jwt\HS256;
-use fkooman\Jwt\Keys\PrivateKey;
-use fkooman\Jwt\Keys\PublicKey;
-use fkooman\Jwt\Keys\SecretKey;
+use fkooman\Jwt\Keys\EdDSA\SecretKey as EdDSASecretKey;
+use fkooman\Jwt\Keys\HS256\SecretKey as HS256SecretKey;
+use fkooman\Jwt\Keys\RS256\PrivateKey as RS256PrivateKey;
+use fkooman\Jwt\Keys\RS256\PublicKey as RS256PublicKey;
 use fkooman\Jwt\RS256;
 
 try {
@@ -38,8 +40,8 @@ try {
 
     // RS256
     $r = new RS256(
-        PublicKey::load(__DIR__.'/rsa.pub'),
-        PrivateKey::load(__DIR__.'/rsa.key')
+        RS256PublicKey::load(__DIR__.'/rsa.pub'),
+        RS256PrivateKey::load(__DIR__.'/rsa.key')
     );
     $jwtStr = $r->encode($claimList);
     echo 'RS256: '.$jwtStr.PHP_EOL;
@@ -49,10 +51,22 @@ try {
 
     // HS256
     $h = new HS256(
-        SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
+        HS256SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
     );
     $jwtStr = $h->encode($claimList);
     echo 'HS256: '.$jwtStr.PHP_EOL;
+    if ($claimList === $h->decode($jwtStr)) {
+        echo 'OK'.PHP_EOL;
+    }
+
+    // EdDSA
+    $secretKey = EdDSASecretKey::fromEncodedString('yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg');
+    $h = new EdDSA(
+        $secretKey->getPublicKey(),
+        $secretKey
+    );
+    $jwtStr = $h->encode($claimList);
+    echo 'EdDSA: '.$jwtStr.PHP_EOL;
     if ($claimList === $h->decode($jwtStr)) {
         echo 'OK'.PHP_EOL;
     }

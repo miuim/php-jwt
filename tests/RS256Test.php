@@ -25,8 +25,8 @@
 namespace fkooman\Jwt\Tests;
 
 use DateTime;
-use fkooman\Jwt\Keys\PrivateKey;
-use fkooman\Jwt\Keys\PublicKey;
+use fkooman\Jwt\Keys\RS256\PrivateKey;
+use fkooman\Jwt\Keys\RS256\PublicKey;
 use fkooman\Jwt\RS256;
 use PHPUnit\Framework\TestCase;
 

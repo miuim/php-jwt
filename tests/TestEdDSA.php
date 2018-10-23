@@ -22,20 +22,30 @@
  * SOFTWARE.
  */
 
-namespace fkooman\Jwt\Tests\Keys;
+namespace fkooman\Jwt\Tests;
 
-use fkooman\Jwt\Keys\HS256\SecretKey;
-use PHPUnit\Framework\TestCase;
+use fkooman\Jwt\EdDSA;
 
-class SecretKeyTest extends TestCase
+class TestEdDSA extends EdDSA
 {
-    public function testGenerate()
+    /**
+     * @param string $inputStr
+     *
+     * @return string
+     */
+    public function sign($inputStr)
     {
-        $secretKey = SecretKey::generate();
-        $encodedKey = $secretKey->encode();
-        $this->assertSame(
-            $encodedKey,
-            SecretKey::fromEncodedString($encodedKey)->encode()
-        );
+        return parent::sign($inputStr);
+    }
+
+    /**
+     * @param string $inputStr
+     * @param string $signatureIn
+     *
+     * @return bool
+     */
+    public function verify($inputStr, $signatureIn)
+    {
+        return parent::verify($inputStr, $signatureIn);
     }
 }

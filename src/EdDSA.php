@@ -24,22 +24,29 @@
 
 namespace fkooman\Jwt;
 
-use fkooman\Jwt\Keys\HS256\SecretKey;
+use fkooman\Jwt\Exception\JwtException;
+use fkooman\Jwt\Keys\EdDSA\PublicKey;
+use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use TypeError;
 
-class HS256 extends Jwt
+class EdDSA extends Jwt
 {
     /** @var string */
-    const JWT_ALGORITHM = 'HS256';
+    const JWT_ALGORITHM = 'EdDSA';
 
-    /** @var Keys\HS256\SecretKey */
+    /** @var Keys\EdDSA\PublicKey */
+    private $publicKey;
+
+    /** @var null|Keys\EdDSA\SecretKey */
     private $secretKey;
 
     /**
-     * @param Keys\HS256\SecretKey $secretKey
+     * @param Keys\EdDSA\PublicKey      $publicKey
+     * @param null|Keys\EdDSA\SecretKey $secretKey
      */
-    public function __construct(SecretKey $secretKey)
+    public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
     {
+        $this->publicKey = $publicKey;
         $this->secretKey = $secretKey;
     }
 
@@ -53,8 +60,11 @@ class HS256 extends Jwt
         if (!\is_string($inputStr)) {
             throw new TypeError('argument 1 must be string');
         }
+        if (null === $this->secretKey) {
+            throw new JwtException('private key not set');
+        }
 
-        return \hash_hmac('sha256', $inputStr, $this->secretKey->getKey(), true);
+        return \sodium_crypto_sign_detached($inputStr, $this->secretKey->raw());
     }
 
     /**
@@ -72,6 +82,6 @@ class HS256 extends Jwt
             throw new TypeError('argument 2 must be string');
         }
 
-        return \hash_equals(self::sign($inputStr), $signatureIn);
+        return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());
     }
 }

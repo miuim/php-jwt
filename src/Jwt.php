@@ -73,7 +73,6 @@ abstract class Jwt
      * @param string $jwtStr
      *
      * @return array
-     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public function decode($jwtStr)
     {
@@ -86,7 +85,7 @@ abstract class Jwt
         }
         $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtParts[0]));
         if (!\array_key_exists('alg', $jwtHeaderData)) {
-            throw new JwtException('"alg" header missing');
+            throw new JwtException('"alg" header key missing');
         }
         if (static::JWT_ALGORITHM !== $jwtHeaderData['alg']) {
             throw new JwtException('unexpected "alg" value');
