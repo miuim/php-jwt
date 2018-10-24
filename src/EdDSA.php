@@ -69,7 +69,7 @@ class EdDSA extends Jwt
             throw new TypeError('argument 1 must be string');
         }
         if (null === $this->secretKey) {
-            throw new JwtException('private key not set');
+            throw new JwtException('secret key not set');
         }
 
         return \sodium_crypto_sign_detached($inputStr, $this->secretKey->raw());

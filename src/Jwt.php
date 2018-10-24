@@ -46,6 +46,7 @@ abstract class Jwt
      */
     public function encode(array $jsonData, $addKeyIdToHeader = false)
     {
+        // XXX make the second parameter be additional header keys!
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
@@ -101,7 +102,7 @@ abstract class Jwt
      *
      * @return null|string
      */
-    public static function getKid($jwtStr)
+    public static function extractKeyId($jwtStr)
     {
         if (!\is_string($jwtStr)) {
             throw new TypeError('argument 1 must be string');
