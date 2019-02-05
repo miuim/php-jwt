@@ -38,6 +38,19 @@ abstract class Jwt
     /** @var \DateTime|null */
     protected $dateTime = null;
 
+    /** @var bool|string */
+    protected $keyId = false;
+
+    /**
+     * @param bool|string $keyId
+     *
+     * @return void
+     */
+    public function setKeyId($keyId)
+    {
+        $this->keyId = $keyId;
+    }
+
     /**
      * @param array $jsonData
      * @param bool  $addKeyIdToHeader
@@ -46,14 +59,13 @@ abstract class Jwt
      */
     public function encode(array $jsonData, $addKeyIdToHeader = false)
     {
-        // XXX make the second parameter be additional header keys!
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
             'typ' => 'JWT',
         ];
 
-        if ($addKeyIdToHeader) {
-            $headerData['kid'] = $this->getKeyId();
+        if (false !== $this->keyId) {
+            $headerData['kid'] = true === $this->keyId ? $this->getKeyId() : $this->keyId;
         }
 
         $jwtHeader = Base64UrlSafe::encodeUnpadded(Json::encode($headerData));
