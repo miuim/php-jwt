@@ -60,4 +60,28 @@ class HS256Test extends TestCase
             HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
         );
     }
+
+    public function testNoKeyId()
+    {
+        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h->useKeyId(false);
+        $jwtStr = $h->encode(['foo' => 'bar']);
+        $this->assertNull(HS256::extractKeyId($jwtStr));
+    }
+
+    public function testAutoKeyId()
+    {
+        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h->useKeyId(true);
+        $jwtStr = $h->encode(['foo' => 'bar']);
+        $this->assertSame('GuPAdkzweB127t4DghKqzVRwitlxJcFcFX0y24nOtvQ', HS256::extractKeyId($jwtStr));
+    }
+
+    public function testManualKeyId()
+    {
+        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h->useKeyId('my_key_id');
+        $jwtStr = $h->encode(['foo' => 'bar']);
+        $this->assertSame('my_key_id', HS256::extractKeyId($jwtStr));
+    }
 }
