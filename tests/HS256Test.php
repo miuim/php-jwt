@@ -45,4 +45,19 @@ class HS256Test extends TestCase
             $h->decode($jwtStr)
         );
     }
+
+    public function testExtractKeyId()
+    {
+        $this->assertSame(
+            'foo',
+            HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.hu7CYwVz0vwCiRThrkcnKBgjyN8k9IYqDzTNvNsO59w')
+        );
+    }
+
+    public function testExtractKeyIdNoKid()
+    {
+        $this->assertNull(
+            HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
+        );
+    }
 }
