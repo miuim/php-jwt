@@ -46,7 +46,7 @@ abstract class Jwt
      *
      * @return void
      */
-    public function setKeyId($keyId)
+    public function useKeyId($keyId)
     {
         $this->keyId = $keyId;
     }
