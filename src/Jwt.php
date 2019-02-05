@@ -35,7 +35,7 @@ use TypeError;
  */
 abstract class Jwt
 {
-    /** @var null|\DateTime */
+    /** @var \DateTime|null */
     protected $dateTime = null;
 
     /**
@@ -100,7 +100,7 @@ abstract class Jwt
     /**
      * @param string $jwtStr
      *
-     * @return null|string
+     * @return string|null
      */
     public static function extractKeyId($jwtStr)
     {
@@ -120,7 +120,7 @@ abstract class Jwt
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     abstract protected function getKeyId();
 

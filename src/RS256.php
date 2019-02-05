@@ -38,12 +38,12 @@ class RS256 extends Jwt
     /** @var Keys\RS256\PublicKey */
     private $publicKey;
 
-    /** @var null|Keys\RS256\PrivateKey */
+    /** @var Keys\RS256\PrivateKey|null */
     private $privateKey;
 
     /**
      * @param Keys\RS256\PublicKey       $publicKey
-     * @param null|Keys\RS256\PrivateKey $privateKey
+     * @param Keys\RS256\PrivateKey|null $privateKey
      */
     public function __construct(PublicKey $publicKey, PrivateKey $privateKey = null)
     {

@@ -37,12 +37,12 @@ class EdDSA extends Jwt
     /** @var Keys\EdDSA\PublicKey */
     private $publicKey;
 
-    /** @var null|Keys\EdDSA\SecretKey */
+    /** @var Keys\EdDSA\SecretKey|null */
     private $secretKey;
 
     /**
      * @param Keys\EdDSA\PublicKey      $publicKey
-     * @param null|Keys\EdDSA\SecretKey $secretKey
+     * @param Keys\EdDSA\SecretKey|null $secretKey
      */
     public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
     {
