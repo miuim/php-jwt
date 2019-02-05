@@ -42,10 +42,9 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 * Does NOT support the [crit](https://tools.ietf.org/html/rfc7515#section-4.1.11) 
   header key. If a token is presented with the `crit` header key it will be 
   rejected;
-* Does NOT support encryption, encryption with the algorithms specified is a 
-  lost cause;
+* Does NOT support encryption;
 * Verifies the `exp` and `nbf` payload field if present to make sure the token 
-  is valid.
+  is already and still valid.
 
 # Keys
 
