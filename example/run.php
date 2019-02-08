@@ -65,8 +65,15 @@ try {
         $secretKey->getPublicKey(),
         $secretKey
     );
+    // set "kid" JWT header
+    $h->setKeyId('my_key_id');
     $jwtStr = $h->encode($claimList);
     echo 'EdDSA: '.$jwtStr.PHP_EOL;
+    // extract "kid" from JWT header
+    $keyId = EdDSA::extractKeyId($jwtStr);
+    if (null !== $keyId) {
+        echo 'Key ID: '.$keyId.PHP_EOL;
+    }
     if ($claimList === $h->decode($jwtStr)) {
         echo 'OK'.PHP_EOL;
     }
