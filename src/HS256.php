@@ -44,14 +44,6 @@ class HS256 extends Jwt
     }
 
     /**
-     * @return string
-     */
-    protected function getKeyId()
-    {
-        return $this->secretKey->getKeyId();
-    }
-
-    /**
      * @param string $inputStr
      *
      * @return string

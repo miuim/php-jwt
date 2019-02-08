@@ -38,15 +38,28 @@ abstract class Jwt
     /** @var \DateTime|null */
     protected $dateTime = null;
 
-    /** @var bool|string */
-    protected $keyId = false;
+    /** @var string|null */
+    protected $keyId = null;
 
     /**
-     * @param bool|string $keyId
+     * Override the "DateTime" for unit testing. Do NOT use this in your
+     * application.
+     *
+     * @param \DateTime $dateTime
      *
      * @return void
      */
-    public function useKeyId($keyId)
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
+    }
+
+    /**
+     * @param string $keyId
+     *
+     * @return void
+     */
+    public function setKeyId($keyId)
     {
         $this->keyId = $keyId;
     }
@@ -63,8 +76,8 @@ abstract class Jwt
             'typ' => 'JWT',
         ];
 
-        if (false !== $this->keyId) {
-            $headerData['kid'] = true === $this->keyId ? $this->getKeyId() : $this->keyId;
+        if (null !== $this->keyId) {
+            $headerData['kid'] = $this->keyId;
         }
 
         $jwtHeader = Base64UrlSafe::encodeUnpadded(Json::encode($headerData));
@@ -72,19 +85,6 @@ abstract class Jwt
         $jwtSignature = Base64UrlSafe::encodeUnpadded($this->sign($jwtHeader.'.'.$jwtPayload));
 
         return $jwtHeader.'.'.$jwtPayload.'.'.$jwtSignature;
-    }
-
-    /**
-     * Override the "DateTime" for unit testing. Do NOT use this in your
-     * application.
-     *
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
-    {
-        $this->dateTime = $dateTime;
     }
 
     /**
@@ -129,11 +129,6 @@ abstract class Jwt
 
         return $jwtHeaderData['kid'];
     }
-
-    /**
-     * @return string|null
-     */
-    abstract protected function getKeyId();
 
     /**
      * @param string $inputStr

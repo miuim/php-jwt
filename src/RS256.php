@@ -52,14 +52,6 @@ class RS256 extends Jwt
     }
 
     /**
-     * @return string
-     */
-    protected function getKeyId()
-    {
-        return $this->publicKey->getKeyId();
-    }
-
-    /**
      * @param string $inputStr
      *
      * @return string
