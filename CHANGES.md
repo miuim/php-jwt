@@ -1,8 +1,8 @@
 # ChangeLog
 
-## 0.3.0 (...)
-- add ability to use a key ID `Jwt::useKeyId()`, either determined 
-  automatically as a derivative of the (public) key or manually
+## 0.3.0 (2019-02-08)
+- add ability to set key ID
+- remove "automatic" key ID from Key classes
 
 ## 0.2.2 (2018-10-23)
 - add missing polyfill
