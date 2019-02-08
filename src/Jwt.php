@@ -53,11 +53,10 @@ abstract class Jwt
 
     /**
      * @param array $jsonData
-     * @param bool  $addKeyIdToHeader
      *
      * @return string
      */
-    public function encode(array $jsonData, $addKeyIdToHeader = false)
+    public function encode(array $jsonData)
     {
         $headerData = [
             'alg' => static::JWT_ALGORITHM,
