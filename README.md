@@ -30,6 +30,24 @@ specification(s).
 On modern PHP versions only `paragonie/constant_time_encoding` is a dependency,
 on older versions a number of polyfills are used. See `composer.json`.
 
+## Use
+
+Currently php-jwt is not hosted on [Packagist](https://packagist.org/). It will
+be added there after the 1.0 release. In the meantime in your `composer.json`:
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://git.tuxed.net/fkooman/php-jwt"
+        },
+        ...
+    ],
+
+    "require": {
+        "fkooman/jwt": "^0.3",
+        ...
+    },
+
 # How?
 
 A secure JWT library for generating and verifying JSON Web Tokens:
