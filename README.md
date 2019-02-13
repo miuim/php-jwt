@@ -20,6 +20,22 @@ means implementing the absolute minimum to support JWT, in a secure way.
 Simplicity and security is more important than fully supporting the 
 specification(s).
 
+# How?
+
+A secure JWT library for generating and verifying JSON Web Tokens:
+
+* Only supports `RS256`, `HS256` and `EdDSA` through separate classes, the 
+  header is _NOT_ used to determine the algorithm;
+* All keys are validated before use and wrapped in "Key" objects, to make sure 
+  they are of the correct format. Helper methods are provided to 
+  load/save/generate keys;
+* Does NOT support the [crit](https://tools.ietf.org/html/rfc7515#section-4.1.11) 
+  header key. If a token is presented with the `crit` header key it will be 
+  rejected;
+* Does NOT support encryption;
+* Verifies the `exp` and `nbf` payload field if present to make sure the token 
+  is already and still valid.
+
 # Requirements
 
 * PHP >= 5.4.8 
@@ -47,22 +63,6 @@ be added there after the 1.0 release. In the meantime in your `composer.json`:
         "fkooman/jwt": "^0.3",
         ...
     },
-
-# How?
-
-A secure JWT library for generating and verifying JSON Web Tokens:
-
-* Only supports `RS256`, `HS256` and `EdDSA` through separate classes, the 
-  header is _NOT_ used to determine the algorithm;
-* All keys are validated before use and wrapped in "Key" objects, to make sure 
-  they are of the correct format. Helper methods are provided to 
-  load/save/generate keys;
-* Does NOT support the [crit](https://tools.ietf.org/html/rfc7515#section-4.1.11) 
-  header key. If a token is presented with the `crit` header key it will be 
-  rejected;
-* Does NOT support encryption;
-* Verifies the `exp` and `nbf` payload field if present to make sure the token 
-  is already and still valid.
 
 # Keys
 
