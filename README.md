@@ -1,38 +1,36 @@
 # Introduction
 
-This is small and secure JSON Web Token implementation. It only supports 
-the following signatures types:
+This is small JSON Web Token implementation. It only supports signatures with 
+the following signature algorithms:
 
 * `HS256` (`HMAC` using `SHA-256`)
 * `RS256` (`RSASSA-PKCS1-v1_5` using `SHA-256`)
 * `EdDSA` (`Ed25519`, [RFC 8037](https://tools.ietf.org/html/rfc8037))
 
-These seem to be the most widely deployed JWT signature algorithms. The library 
-does _NOT_ support encryption/decryption. Needless to say, this library is 
-_NOT_ fully compliant with the JWT specification!
+The first two seem to be the most widely deployed JWT signature algorithms. The
+library does _NOT_ support encryption/decryption due to the can of worms that
+would open. It _MAY_ support encryption/decryption in the future, but not with
+RSA.
 
 # Why?
 
 Quite a number of JWT implementations exist for PHP, varying in quality. 
 However, JWT can be [insecure](https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid), 
-so it is very important to get things right from a security perspective. This
-means implementing the absolute minimum to support JWT, in a secure way. 
-Simplicity and security is more important than fully supporting the 
-specification(s).
+so it is very important to get things right and as simple as possible from a 
+security perspective. This means implementing the absolute minimum to support 
+JWT, in a secure way. Simplicity and security is more important than fully 
+supporting every nook and cranny of the specification.
 
 # How?
 
-A secure JWT library for generating and verifying JSON Web Tokens:
-
 * Only supports `RS256`, `HS256` and `EdDSA` through separate classes, the 
-  header is _NOT_ used to determine the algorithm;
-* All keys are validated before use and wrapped in "Key" objects, to make sure 
-  they are of the correct format. Helper methods are provided to 
-  load/save/generate keys;
+  header is _NOT_ used to determine the algorithm when verifying signatures;
+* All keys are validated before use and wrapped in "Key" objects to make sure 
+  they are of the correct format. Helper methods are provided to load / save / 
+  generate keys;
 * Does NOT support the [crit](https://tools.ietf.org/html/rfc7515#section-4.1.11) 
   header key. If a token is presented with the `crit` header key it will be 
   rejected;
-* Does NOT support encryption;
 * Verifies the `exp` and `nbf` payload field if present to make sure the token 
   is already and still valid.
 
@@ -41,10 +39,11 @@ A secure JWT library for generating and verifying JSON Web Tokens:
 * PHP >= 5.4.8 
 * `php-hash` (for `HS256`)
 * `php-openssl` (for `RS256`)
-* `php-pecl-libsodium` or `php-sodium` (for `EdDSA`)
+* `php-pecl-libsodium` with PHP < 7.2 or `php-sodium` with PHP >= 7.2 
+  (for `EdDSA`)
 
 On modern PHP versions only `paragonie/constant_time_encoding` is a dependency,
-on older versions a number of polyfills are used. See `composer.json`.
+on older versions some polyfills are used. See `composer.json`.
 
 ## Use
 
@@ -66,16 +65,23 @@ be added there after the 1.0 release. In the meantime in your `composer.json`:
 
 # Keys
 
+Below we show how to generate keys for the various JWT algorithms. Do NOT use
+any other way unless you know what you are doing!
+
 ## RS256 (RSA)
+
+Use the `openssl` command line to generate they public and private key:
 
 ```bash
 $ openssl genrsa --out rsa.key 2048
 $ openssl rsa -in rsa.key -pubout -out rsa.pub
 ```
 
-The RSA key MUST have [at least](https://tools.ietf.org/html/rfc7518#section-4.2)
-2048 bits. This will generate a private key in `rsa.key` and the public key in 
-`rsa.pub`. Those files can be used with `PublicKey` and `PrivateKey`.
+The RSA key MUST have 
+[at least](https://tools.ietf.org/html/rfc7518#section-4.2) 2048 bits. The 
+above command will generate a private key in `rsa.key` and the public key in 
+`rsa.pub`. Those files can be used with the `PublicKey` and `PrivateKey` key 
+wrapping classes.
 
 To inspect a public key:
 
@@ -85,8 +91,8 @@ $ openssl rsa -pubin -in rsa.pub -noout -text
 
 ## HS256 (HMAC)
 
-Some helper methods are introduced to help you with generating, loading and 
-saving keys. Do NOT use any other means to generate keys!
+As this is a HMAC, there is only one key both for signing and verifying the 
+JWT.
 
 ```php
 <?php
@@ -117,6 +123,8 @@ The public key can be obtained from the secret key by calling the
 
 # API
 
+This section describes how to use the various JWT types.
+
 ## RS256
 
 ```php
@@ -131,7 +139,7 @@ var_dump($r->decode($jwtStr));
 ```
 
 The `PrivateKey` parameter is optional. Do not specify it if you only want to
-verify JWTs. Of course, you need to specify it when you want to sign a JWT.
+verify JWTs. Of course, you need to specify it when you want to sign JWTs.
 
 ## HS256
 
@@ -167,3 +175,21 @@ var_dump($r->decode($jwtStr));
 
 The `SecretKey` parameter is optional. Do not specify it if you only want to
 verify JWTs. Of course, you need to specify it when you want to sign a JWT.
+
+# Example
+
+See the `example/` directory for a working example.
+
+# Testing
+
+You can run the included test suite after cloning the repository:
+
+    $ /path/to/composer install
+    $ vendor/bin/phpunit
+
+# Benchmark
+
+You can use [PHPBench](https://phpbench.readthedocs.io/en/latest/) to run some 
+benchmarks comparing the various signature algorithms.
+
+    $ /path/to/phpbench run
