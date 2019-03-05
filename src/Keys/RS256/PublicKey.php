@@ -26,7 +26,6 @@ namespace fkooman\Jwt\Keys\RS256;
 
 use fkooman\Jwt\Exception\KeyException;
 use RuntimeException;
-use TypeError;
 
 class PublicKey
 {
@@ -38,9 +37,6 @@ class PublicKey
      */
     public function __construct($publicKeyStr)
     {
-        if (!\is_string($publicKeyStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
             throw new KeyException('invalid public key');
         }
@@ -54,9 +50,6 @@ class PublicKey
      */
     public static function load($fileName)
     {
-        if (!\is_string($fileName)) {
-            throw new TypeError('argument 1 must be string');
-        }
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {
             throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));

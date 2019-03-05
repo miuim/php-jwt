@@ -27,7 +27,6 @@ namespace fkooman\Jwt\Keys\RS256;
 use fkooman\Jwt\Exception\KeyException;
 use ParagonIE\ConstantTime\Binary;
 use RuntimeException;
-use TypeError;
 
 class PrivateKey
 {
@@ -39,9 +38,6 @@ class PrivateKey
      */
     public function __construct($privateKeyStr)
     {
-        if (!\is_string($privateKeyStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
             throw new KeyException('invalid private key');
         }
@@ -69,9 +65,6 @@ class PrivateKey
      */
     public static function load($fileName)
     {
-        if (!\is_string($fileName)) {
-            throw new TypeError('argument 1 must be string');
-        }
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {
             throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));

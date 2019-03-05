@@ -25,7 +25,6 @@
 namespace fkooman\Jwt;
 
 use fkooman\Jwt\Keys\HS256\SecretKey;
-use TypeError;
 
 class HS256 extends Jwt
 {
@@ -50,10 +49,6 @@ class HS256 extends Jwt
      */
     protected function sign($inputStr)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
         return \hash_hmac('sha256', $inputStr, $this->secretKey->raw(), true);
     }
 
@@ -65,13 +60,6 @@ class HS256 extends Jwt
      */
     protected function verify($inputStr, $signatureIn)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
-        if (!\is_string($signatureIn)) {
-            throw new TypeError('argument 2 must be string');
-        }
-
         return \hash_equals(self::sign($inputStr), $signatureIn);
     }
 }

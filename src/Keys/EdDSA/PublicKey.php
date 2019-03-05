@@ -27,7 +27,6 @@ namespace fkooman\Jwt\Keys\EdDSA;
 use LengthException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
-use TypeError;
 
 class PublicKey
 {
@@ -39,9 +38,6 @@ class PublicKey
      */
     public function __construct($publicKey)
     {
-        if (!\is_string($publicKey)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
             throw new LengthException('invalid public key length');
         }
@@ -63,10 +59,6 @@ class PublicKey
      */
     public static function fromEncodedString($encodedString)
     {
-        if (!\is_string($encodedString)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
         return new self(Base64UrlSafe::decode($encodedString));
     }
 

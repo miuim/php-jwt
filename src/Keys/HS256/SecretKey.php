@@ -27,7 +27,6 @@ namespace fkooman\Jwt\Keys\HS256;
 use fkooman\Jwt\Exception\KeyException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
-use TypeError;
 
 class SecretKey
 {
@@ -42,9 +41,6 @@ class SecretKey
      */
     public function __construct($secretKey)
     {
-        if (!\is_string($secretKey)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (32 !== Binary::safeStrlen($secretKey)) {
             throw new KeyException('invalid key length');
         }
@@ -74,10 +70,6 @@ class SecretKey
      */
     public static function fromEncodedString($encodedKey)
     {
-        if (!\is_string($encodedKey)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
         return new self(Base64UrlSafe::decode($encodedKey));
     }
 

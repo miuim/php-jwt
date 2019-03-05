@@ -27,7 +27,6 @@ namespace fkooman\Jwt;
 use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use TypeError;
 
 class EdDSA extends Jwt
 {
@@ -57,9 +56,6 @@ class EdDSA extends Jwt
      */
     protected function sign($inputStr)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (null === $this->secretKey) {
             throw new JwtException('secret key not set');
         }
@@ -75,13 +71,6 @@ class EdDSA extends Jwt
      */
     protected function verify($inputStr, $signatureIn)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
-        if (!\is_string($signatureIn)) {
-            throw new TypeError('argument 2 must be string');
-        }
-
         return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());
     }
 }

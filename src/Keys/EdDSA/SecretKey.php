@@ -26,7 +26,6 @@ namespace fkooman\Jwt\Keys\EdDSA;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
-use TypeError;
 
 class SecretKey
 {
@@ -38,10 +37,6 @@ class SecretKey
      */
     public function __construct($secretKey)
     {
-        if (!\is_string($secretKey)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
         switch (Binary::safeStrlen($secretKey)) {
             case SODIUM_CRYPTO_SIGN_SECRETKEYBYTES:
                 $this->secretKey = $secretKey;
@@ -84,10 +79,6 @@ class SecretKey
      */
     public static function fromEncodedString($encodedString)
     {
-        if (!\is_string($encodedString)) {
-            throw new TypeError('argument 1 must be string');
-        }
-
         return new self(Base64UrlSafe::decode($encodedString));
     }
 

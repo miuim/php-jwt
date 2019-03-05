@@ -28,7 +28,6 @@ use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\RS256\PrivateKey;
 use fkooman\Jwt\Keys\RS256\PublicKey;
 use RuntimeException;
-use TypeError;
 
 class RS256 extends Jwt
 {
@@ -58,9 +57,6 @@ class RS256 extends Jwt
      */
     protected function sign($inputStr)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         if (null === $this->privateKey) {
             throw new JwtException('private key not set');
         }
@@ -80,12 +76,6 @@ class RS256 extends Jwt
      */
     protected function verify($inputStr, $signatureIn)
     {
-        if (!\is_string($inputStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
-        if (!\is_string($signatureIn)) {
-            throw new TypeError('argument 2 must be string');
-        }
         $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);
         if (1 === $verifyResult) {
             return true;

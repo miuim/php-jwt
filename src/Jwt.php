@@ -27,7 +27,6 @@ namespace fkooman\Jwt;
 use DateTime;
 use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use TypeError;
 
 /**
  * The base class that MUST be extended by the classes that actually implement
@@ -94,9 +93,6 @@ abstract class Jwt
      */
     public function decode($jwtStr)
     {
-        if (!\is_string($jwtStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         $jwtParts = self::parseToken($jwtStr);
         self::validateHeader($jwtParts[0]);
         if (false === $this->verify($jwtParts[0].'.'.$jwtParts[1], Base64UrlSafe::decode($jwtParts[2]))) {
@@ -115,9 +111,6 @@ abstract class Jwt
      */
     public static function extractKeyId($jwtStr)
     {
-        if (!\is_string($jwtStr)) {
-            throw new TypeError('argument 1 must be string');
-        }
         $jwtParts = self::parseToken($jwtStr);
         $jwtHeaderData = self::validateHeader($jwtParts[0]);
         if (!\array_key_exists('kid', $jwtHeaderData)) {
