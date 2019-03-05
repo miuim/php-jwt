@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 1.0.0 (...)
+- remove redundant type checks
+
 ## 0.3.0 (2019-02-08)
 - add ability to set key ID
 - remove "automatic" key ID from Key classes
