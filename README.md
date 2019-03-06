@@ -47,8 +47,8 @@ on older versions some polyfills are used. See `composer.json`.
 
 ## Use
 
-Currently php-jwt is not hosted on [Packagist](https://packagist.org/). It will
-be added there after the 1.0 release. In the meantime in your `composer.json`:
+Currently php-jwt is not hosted on [Packagist](https://packagist.org/). It may
+be added in the future. In your `composer.json`:
 
     "repositories": [
         {
@@ -59,9 +59,12 @@ be added there after the 1.0 release. In the meantime in your `composer.json`:
     ],
 
     "require": {
-        "fkooman/jwt": "^0.3",
+        "fkooman/jwt": "^1",
         ...
     },
+
+You can also download the signed source code archive 
+[here](https://software.tuxed.net/php-jwt/download.html).
 
 # Keys
 
