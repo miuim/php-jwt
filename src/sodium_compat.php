@@ -64,7 +64,6 @@ if (!\is_callable('sodium_crypto_sign_keypair')) {
 if (!\is_callable('sodium_crypto_sign_publickey_from_secretkey')) {
     /**
      * @param string $sk
-     * @param mixed  $keypair
      *
      * @return string
      */
