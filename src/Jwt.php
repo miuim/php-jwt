@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -35,10 +37,10 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
 abstract class Jwt
 {
     /** @var \DateTime|null */
-    protected $dateTime = null;
+    protected $dateTime;
 
     /** @var string|null */
-    protected $keyId = null;
+    protected $keyId;
 
     /**
      * Override the "DateTime" for unit testing. Do NOT use this in your
@@ -48,7 +50,7 @@ abstract class Jwt
      *
      * @return void
      */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -58,7 +60,7 @@ abstract class Jwt
      *
      * @return void
      */
-    public function setKeyId($keyId)
+    public function setKeyId(string $keyId): void
     {
         $this->keyId = $keyId;
     }
@@ -68,10 +70,10 @@ abstract class Jwt
      *
      * @return string
      */
-    public function encode(array $jsonData)
+    public function encode(array $jsonData): string
     {
         $headerData = [
-            'alg' => static::JWT_ALGORITHM,
+            'alg' => static::getAlgorithm(),
             'typ' => 'JWT',
         ];
 
@@ -91,7 +93,7 @@ abstract class Jwt
      *
      * @return array
      */
-    public function decode($jwtStr)
+    public function decode(string $jwtStr): array
     {
         $jwtParts = self::parseToken($jwtStr);
         self::validateHeader($jwtParts[0]);
@@ -109,7 +111,7 @@ abstract class Jwt
      *
      * @return string|null
      */
-    public static function extractKeyId($jwtStr)
+    public static function extractKeyId(string $jwtStr): ?string
     {
         $jwtParts = self::parseToken($jwtStr);
         $jwtHeaderData = self::validateHeader($jwtParts[0]);
@@ -124,11 +126,16 @@ abstract class Jwt
     }
 
     /**
+     * @return string
+     */
+    abstract protected static function getAlgorithm(): string;
+
+    /**
      * @param string $inputStr
      *
      * @return string
      */
-    abstract protected function sign($inputStr);
+    abstract protected function sign(string $inputStr): string;
 
     /**
      * @param string $inputStr
@@ -136,14 +143,14 @@ abstract class Jwt
      *
      * @return bool
      */
-    abstract protected function verify($inputStr, $signatureIn);
+    abstract protected function verify(string $inputStr, string $signatureIn): bool;
 
     /**
      * @param string $jwtStr
      *
      * @return array<string>
      */
-    private static function parseToken($jwtStr)
+    private static function parseToken(string $jwtStr)
     {
         $jwtParts = \explode('.', $jwtStr);
         if (3 !== \count($jwtParts)) {
@@ -158,13 +165,13 @@ abstract class Jwt
      *
      * @return array
      */
-    private static function validateHeader($jwtHeaderStr)
+    private static function validateHeader(string $jwtHeaderStr): array
     {
         $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtHeaderStr));
         if (!\array_key_exists('alg', $jwtHeaderData)) {
             throw new JwtException('"alg" header key missing');
         }
-        if (static::JWT_ALGORITHM !== $jwtHeaderData['alg']) {
+        if (static::getAlgorithm() !== $jwtHeaderData['alg']) {
             throw new JwtException('unexpected "alg" value');
         }
         if (\array_key_exists('crit', $jwtHeaderData)) {
@@ -181,9 +188,9 @@ abstract class Jwt
      *
      * @return void
      */
-    private function checkToken(array $payloadData)
+    private function checkToken(array $payloadData): void
     {
-        $dateTime = null !== $this->dateTime ? $this->dateTime : new DateTime();
+        $dateTime = $this->dateTime ?? new DateTime();
 
         // exp
         if (\array_key_exists('exp', $payloadData)) {

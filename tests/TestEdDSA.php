@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -26,6 +28,11 @@ namespace fkooman\Jwt\Tests;
 
 use fkooman\Jwt\EdDSA;
 
+/**
+ * This class extends EdDSA to be able to (directly) test the "sign" and
+ * "verify" methods as they are protected and should not be exposed to the
+ * API user, but we still want to test them.
+ */
 class TestEdDSA extends EdDSA
 {
     /**
@@ -33,7 +40,7 @@ class TestEdDSA extends EdDSA
      *
      * @return string
      */
-    public function sign($inputStr)
+    public function sign(string $inputStr): string
     {
         return parent::sign($inputStr);
     }
@@ -44,7 +51,7 @@ class TestEdDSA extends EdDSA
      *
      * @return bool
      */
-    public function verify($inputStr, $signatureIn)
+    public function verify(string $inputStr, string $signatureIn): bool
     {
         return parent::verify($inputStr, $signatureIn);
     }

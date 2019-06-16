@@ -4,8 +4,15 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules(
         [
+            '@PhpCsFixer' => true,
+            '@PhpCsFixer:risky' => true,
             '@Symfony' => true,
             '@Symfony:risky' => true,
+            '@PHP70Migration' => true,
+            '@PHP70Migration:risky' => true,
+            '@PHP71Migration' => true,
+            '@PHP71Migration:risky' => true,
+            'phpdoc_to_return_type' => true,
             'ordered_imports' => true,
             'ordered_class_elements' => true,
             'array_syntax' => ['syntax' => 'short'],
@@ -38,7 +45,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 EOD
-             ],
+            ],
         ]
     )
-    ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__));
+    ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__))
+;

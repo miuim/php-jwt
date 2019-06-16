@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -31,7 +33,7 @@ use ParagonIE\ConstantTime\Binary;
 class SecretKey
 {
     /** @var int */
-    const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
+    private const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
 
     /** @var string */
     private $secretKey;
@@ -39,7 +41,7 @@ class SecretKey
     /**
      * @param string $secretKey
      */
-    public function __construct($secretKey)
+    public function __construct(string $secretKey)
     {
         if (32 !== Binary::safeStrlen($secretKey)) {
             throw new KeyException('invalid key length');
@@ -50,7 +52,7 @@ class SecretKey
     /**
      * @return self
      */
-    public static function generate()
+    public static function generate(): self
     {
         return new self(\random_bytes(self::KEY_LENGTH_BYTES));
     }
@@ -58,7 +60,7 @@ class SecretKey
     /**
      * @return string
      */
-    public function encode()
+    public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->secretKey);
     }
@@ -68,7 +70,7 @@ class SecretKey
      *
      * @return self
      */
-    public static function fromEncodedString($encodedKey)
+    public static function fromEncodedString(string $encodedKey): self
     {
         return new self(Base64UrlSafe::decode($encodedKey));
     }
@@ -76,7 +78,7 @@ class SecretKey
     /**
      * @return string
      */
-    public function raw()
+    public function raw(): string
     {
         return $this->secretKey;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -30,9 +32,13 @@ use fkooman\Jwt\Keys\RS256\PublicKey;
 use fkooman\Jwt\RS256;
 use PHPUnit\Framework\TestCase;
 
-class RS256Test extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class RS256Test extends TestCase
 {
-    public function testSimple()
+    public function testSimple(): void
     {
         $r = new RS256(
             PublicKey::load(__DIR__.'/keys/rsa.pub'),
@@ -45,13 +51,13 @@ class RS256Test extends TestCase
             'iat' => 1516239022,
         ];
         $jwtStr = $r->encode($payloadData);
-        $this->assertSame(
+        static::assertSame(
             $payloadData,
             $r->decode($jwtStr)
         );
     }
 
-    public function testDataporten()
+    public function testDataporten(): void
     {
         $publicKey = new PublicKey('-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxFyeEkBwkozPqYqelBrX
@@ -75,7 +81,7 @@ WwIDAQAB
             'exp' => 1534756883,
             'auth_time' => 1534753281,
         ];
-        $this->assertSame(
+        static::assertSame(
             $payloadData,
             $r->decode($jwtStr)
         );

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -31,9 +33,6 @@ use RuntimeException;
 
 class RS256 extends Jwt
 {
-    /** @var string */
-    const JWT_ALGORITHM = 'RS256';
-
     /** @var Keys\RS256\PublicKey */
     private $publicKey;
 
@@ -51,17 +50,25 @@ class RS256 extends Jwt
     }
 
     /**
+     * @return string
+     */
+    protected static function getAlgorithm(): string
+    {
+        return 'RS256';
+    }
+
+    /**
      * @param string $inputStr
      *
      * @return string
      */
-    protected function sign($inputStr)
+    protected function sign(string $inputStr): string
     {
-        if (null === $this->privateKey) {
+        if (null === $privateKey = $this->privateKey) {
             throw new JwtException('private key not set');
         }
         $signatureOut = '';
-        if (false === \openssl_sign($inputStr, $signatureOut, $this->privateKey->raw(), OPENSSL_ALGO_SHA256)) {
+        if (false === \openssl_sign($inputStr, $signatureOut, $privateKey->raw(), OPENSSL_ALGO_SHA256)) {
             throw new RuntimeException('OpenSSL: unable to sign');
         }
 
@@ -74,7 +81,7 @@ class RS256 extends Jwt
      *
      * @return bool
      */
-    protected function verify($inputStr, $signatureIn)
+    protected function verify(string $inputStr, string $signatureIn): bool
     {
         $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);
         if (1 === $verifyResult) {

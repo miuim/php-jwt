@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -26,53 +28,58 @@ namespace fkooman\Jwt\Tests;
 
 use fkooman\Jwt\HS256;
 use fkooman\Jwt\Keys\HS256\SecretKey;
+use ParagonIE\ConstantTime\Base64;
 use PHPUnit\Framework\TestCase;
 
-class HS256Test extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class HS256Test extends TestCase
 {
-    public function testSimple()
+    public function testSimple(): void
     {
-        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
         $jwtStr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8CymvZz4_nrhKF9cO2y4yo3UmDJ30QiuidJvLlH_0Is';
         $payloadData = [
-              'sub' => '1234567890',
-              'name' => 'John Doe',
-              'iat' => 1516239022,
+            'sub' => '1234567890',
+            'name' => 'John Doe',
+            'iat' => 1516239022,
         ];
-        $this->assertSame($jwtStr, $h->encode($payloadData));
-        $this->assertSame(
+        static::assertSame($jwtStr, $h->encode($payloadData));
+        static::assertSame(
             $payloadData,
             $h->decode($jwtStr)
         );
     }
 
-    public function testExtractKeyId()
+    public function testExtractKeyId(): void
     {
-        $this->assertSame(
+        static::assertSame(
             'foo',
             HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.hu7CYwVz0vwCiRThrkcnKBgjyN8k9IYqDzTNvNsO59w')
         );
     }
 
-    public function testExtractKeyIdNoKid()
+    public function testExtractKeyIdNoKid(): void
     {
-        $this->assertNull(
+        static::assertNull(
             HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
         );
     }
 
-    public function testNoKeyId()
+    public function testNoKeyId(): void
     {
-        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
         $jwtStr = $h->encode(['foo' => 'bar']);
-        $this->assertNull(HS256::extractKeyId($jwtStr));
+        static::assertNull(HS256::extractKeyId($jwtStr));
     }
 
-    public function testManualKeyId()
+    public function testManualKeyId(): void
     {
-        $h = new HS256(new SecretKey(\base64_decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
         $h->setKeyId('my_key_id');
         $jwtStr = $h->encode(['foo' => 'bar']);
-        $this->assertSame('my_key_id', HS256::extractKeyId($jwtStr));
+        static::assertSame('my_key_id', HS256::extractKeyId($jwtStr));
     }
 }

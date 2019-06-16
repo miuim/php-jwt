@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -27,13 +29,17 @@ namespace fkooman\Jwt\Tests\Keys;
 use fkooman\Jwt\Keys\HS256\SecretKey;
 use PHPUnit\Framework\TestCase;
 
-class SecretKeyTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class SecretKeyTest extends TestCase
 {
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $secretKey = SecretKey::generate();
         $encodedKey = $secretKey->encode();
-        $this->assertSame(
+        static::assertSame(
             $encodedKey,
             SecretKey::fromEncodedString($encodedKey)->encode()
         );

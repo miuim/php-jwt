@@ -36,14 +36,12 @@ supporting every nook and cranny of the specification.
 
 # Requirements
 
-* PHP >= 5.4.8 
+* PHP >= 7.2
 * `php-hash` (for `HS256`)
 * `php-openssl` (for `RS256`)
-* `php-pecl-libsodium` with PHP < 7.2 or `php-sodium` with PHP >= 7.2 
-  (for `EdDSA`)
+* `php-sodium` (for `EdDSA`)
 
-On modern PHP versions only `paragonie/constant_time_encoding` is a dependency,
-on older versions some polyfills are used. See `composer.json`.
+On modern PHP versions only `paragonie/constant_time_encoding` is a dependency.
 
 ## Use
 
@@ -59,7 +57,7 @@ be added in the future. In your `composer.json`:
     ],
 
     "require": {
-        "fkooman/jwt": "^1",
+        "fkooman/jwt": "^2",
         ...
     },
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -30,9 +32,6 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 
 class EdDSA extends Jwt
 {
-    /** @var string */
-    const JWT_ALGORITHM = 'EdDSA';
-
     /** @var Keys\EdDSA\PublicKey */
     private $publicKey;
 
@@ -50,17 +49,25 @@ class EdDSA extends Jwt
     }
 
     /**
+     * @return string
+     */
+    protected static function getAlgorithm(): string
+    {
+        return 'EdDSA';
+    }
+
+    /**
      * @param string $inputStr
      *
      * @return string
      */
-    protected function sign($inputStr)
+    protected function sign(string $inputStr): string
     {
-        if (null === $this->secretKey) {
+        if (null === $secretKey = $this->secretKey) {
             throw new JwtException('secret key not set');
         }
 
-        return \sodium_crypto_sign_detached($inputStr, $this->secretKey->raw());
+        return \sodium_crypto_sign_detached($inputStr, $secretKey->raw());
     }
 
     /**
@@ -69,7 +76,7 @@ class EdDSA extends Jwt
      *
      * @return bool
      */
-    protected function verify($inputStr, $signatureIn)
+    protected function verify(string $inputStr, string $signatureIn): bool
     {
         return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -35,7 +37,7 @@ class SecretKey
     /**
      * @param string $secretKey
      */
-    public function __construct($secretKey)
+    public function __construct(string $secretKey)
     {
         switch (Binary::safeStrlen($secretKey)) {
             case SODIUM_CRYPTO_SIGN_SECRETKEYBYTES:
@@ -55,7 +57,7 @@ class SecretKey
     /**
      * @return self
      */
-    public static function generate()
+    public static function generate(): self
     {
         return new self(
             \sodium_crypto_sign_secretkey(
@@ -67,7 +69,7 @@ class SecretKey
     /**
      * @return string
      */
-    public function encode()
+    public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->secretKey);
     }
@@ -77,7 +79,7 @@ class SecretKey
      *
      * @return self
      */
-    public static function fromEncodedString($encodedString)
+    public static function fromEncodedString(string $encodedString): self
     {
         return new self(Base64UrlSafe::decode($encodedString));
     }
@@ -85,7 +87,7 @@ class SecretKey
     /**
      * @return PublicKey
      */
-    public function getPublicKey()
+    public function getPublicKey(): PublicKey
     {
         return new PublicKey(
             \sodium_crypto_sign_publickey_from_secretkey($this->secretKey)
@@ -95,7 +97,7 @@ class SecretKey
     /**
      * @return string
      */
-    public function raw()
+    public function raw(): string
     {
         return $this->secretKey;
     }

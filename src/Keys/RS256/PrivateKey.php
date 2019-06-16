@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -36,7 +38,7 @@ class PrivateKey
     /**
      * @param string $privateKeyStr
      */
-    public function __construct($privateKeyStr)
+    public function __construct(string $privateKeyStr)
     {
         if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
             throw new KeyException('invalid private key');
@@ -63,7 +65,7 @@ class PrivateKey
      *
      * @return self
      */
-    public static function load($fileName)
+    public static function load(string $fileName): self
     {
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {

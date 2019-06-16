@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -36,7 +38,7 @@ class PublicKey
     /**
      * @param string $publicKey
      */
-    public function __construct($publicKey)
+    public function __construct(string $publicKey)
     {
         if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
             throw new LengthException('invalid public key length');
@@ -47,7 +49,7 @@ class PublicKey
     /**
      * @return string
      */
-    public function encode()
+    public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->publicKey);
     }
@@ -57,7 +59,7 @@ class PublicKey
      *
      * @return self
      */
-    public static function fromEncodedString($encodedString)
+    public static function fromEncodedString(string $encodedString): self
     {
         return new self(Base64UrlSafe::decode($encodedString));
     }
@@ -65,7 +67,7 @@ class PublicKey
     /**
      * @return string
      */
-    public function raw()
+    public function raw(): string
     {
         return $this->publicKey;
     }

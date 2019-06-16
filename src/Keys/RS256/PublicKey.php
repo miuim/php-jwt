@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -35,7 +37,7 @@ class PublicKey
     /**
      * @param string $publicKeyStr
      */
-    public function __construct($publicKeyStr)
+    public function __construct(string $publicKeyStr)
     {
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
             throw new KeyException('invalid public key');
@@ -48,7 +50,7 @@ class PublicKey
      *
      * @return self
      */
-    public static function load($fileName)
+    public static function load(string $fileName): self
     {
         $fileData = @\file_get_contents($fileName);
         if (false === $fileData) {

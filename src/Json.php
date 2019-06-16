@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -33,7 +35,7 @@ class Json
      *
      * @return string
      */
-    public static function encode(array $jsonData)
+    public static function encode(array $jsonData): string
     {
         $jsonString = \json_encode($jsonData);
         // 5.5.0 	The return value on failure was changed from null string to FALSE.
@@ -54,7 +56,7 @@ class Json
      *
      * @return array
      */
-    public static function decode($jsonString)
+    public static function decode(string $jsonString): array
     {
         /** @psalm-suppress MixedAssignment */
         $jsonData = \json_decode($jsonString, true);

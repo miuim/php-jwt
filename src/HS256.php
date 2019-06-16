@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright (c) 2019 François Kooman <fkooman@tuxed.net>
  *
@@ -28,9 +30,6 @@ use fkooman\Jwt\Keys\HS256\SecretKey;
 
 class HS256 extends Jwt
 {
-    /** @var string */
-    const JWT_ALGORITHM = 'HS256';
-
     /** @var Keys\HS256\SecretKey */
     private $secretKey;
 
@@ -43,11 +42,19 @@ class HS256 extends Jwt
     }
 
     /**
+     * @return string
+     */
+    protected static function getAlgorithm(): string
+    {
+        return 'HS256';
+    }
+
+    /**
      * @param string $inputStr
      *
      * @return string
      */
-    protected function sign($inputStr)
+    protected function sign(string $inputStr): string
     {
         return \hash_hmac('sha256', $inputStr, $this->secretKey->raw(), true);
     }
@@ -58,7 +65,7 @@ class HS256 extends Jwt
      *
      * @return bool
      */
-    protected function verify($inputStr, $signatureIn)
+    protected function verify(string $inputStr, string $signatureIn): bool
     {
         return \hash_equals(self::sign($inputStr), $signatureIn);
     }
