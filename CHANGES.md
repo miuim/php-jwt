@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2.0.0 (...)
+- require PHP >= 7.2
+- enable strict types
+- add verify benchmarks
+- better way to expose algorithm from the subclasses
+- add Phan static type checking configuration file
+
 ## 1.0.0 (2019-03-06)
 - remove redundant type checks
 - update README
