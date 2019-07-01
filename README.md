@@ -41,7 +41,7 @@ supporting every nook and cranny of the specification.
 * `php-openssl` (for `RS256`)
 * `php-sodium` (for `EdDSA`)
 
-On modern PHP versions only `paragonie/constant_time_encoding` is a dependency.
+Only `paragonie/constant_time_encoding` is a dependency.
 
 ## Use
 
