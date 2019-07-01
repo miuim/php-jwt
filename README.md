@@ -34,6 +34,13 @@ supporting every nook and cranny of the specification.
 * Verifies the `exp` and `nbf` payload field if present to make sure the token 
   is already and still valid.
 
+# Versions 
+
+| Version | PHP    | OS                  |
+|---------|--------|---------------------|
+| 1.x     | >= 5.4 | CentOS 7, Debian 9  |
+| 2.x     | >= 7.2 | CentOS 8, Debian 10 |
+
 # Requirements
 
 * PHP >= 7.2
