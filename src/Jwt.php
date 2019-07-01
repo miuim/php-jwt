@@ -52,6 +52,9 @@ abstract class Jwt
         $this->dateTime = $dateTime;
     }
 
+    /**
+     * Set the "kid" header key.
+     */
     public function setKeyId(string $keyId): void
     {
         $this->keyId = $keyId;
@@ -102,6 +105,9 @@ abstract class Jwt
         return $jwtHeaderData['kid'];
     }
 
+    /**
+     * Get the "alg" header key for the particular implementation.
+     */
     abstract protected static function getAlgorithm(): string;
 
     abstract protected function sign(string $inputStr): string;
@@ -147,7 +153,7 @@ abstract class Jwt
         // exp
         if (\array_key_exists('exp', $payloadData)) {
             if (!\is_int($payloadData['exp'])) {
-                throw new JwtException('"exp" not an integer');
+                throw new JwtException('"exp" must be an integer');
             }
             if ($dateTime->getTimestamp() >= $payloadData['exp']) {
                 throw new JwtException('token no longer valid');
@@ -157,7 +163,7 @@ abstract class Jwt
         // nbf
         if (\array_key_exists('nbf', $payloadData)) {
             if (!\is_int($payloadData['nbf'])) {
-                throw new JwtException('"nbf" not an integer');
+                throw new JwtException('"nbf" must be an integer');
             }
             if ($dateTime->getTimestamp() < $payloadData['nbf']) {
                 throw new JwtException('token not yet valid');
