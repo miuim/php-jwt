@@ -33,35 +33,23 @@ use RuntimeException;
 
 class RS256 extends Jwt
 {
-    /** @var Keys\RS256\PublicKey */
+    /** @var \fkooman\Jwt\Keys\RS256\PublicKey */
     private $publicKey;
 
-    /** @var Keys\RS256\PrivateKey|null */
+    /** @var ?\fkooman\Jwt\Keys\RS256\PrivateKey */
     private $privateKey;
 
-    /**
-     * @param Keys\RS256\PublicKey       $publicKey
-     * @param Keys\RS256\PrivateKey|null $privateKey
-     */
-    public function __construct(PublicKey $publicKey, PrivateKey $privateKey = null)
+    public function __construct(PublicKey $publicKey, ?PrivateKey $privateKey = null)
     {
         $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
     }
 
-    /**
-     * @return string
-     */
     protected static function getAlgorithm(): string
     {
         return 'RS256';
     }
 
-    /**
-     * @param string $inputStr
-     *
-     * @return string
-     */
     protected function sign(string $inputStr): string
     {
         if (null === $privateKey = $this->privateKey) {
@@ -75,12 +63,6 @@ class RS256 extends Jwt
         return $signatureOut;
     }
 
-    /**
-     * @param string $inputStr
-     * @param string $signatureIn
-     *
-     * @return bool
-     */
     protected function verify(string $inputStr, string $signatureIn): bool
     {
         $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);

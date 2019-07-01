@@ -34,9 +34,6 @@ class SecretKey
     /** @var string */
     private $secretKey;
 
-    /**
-     * @param string $secretKey
-     */
     public function __construct(string $secretKey)
     {
         switch (Binary::safeStrlen($secretKey)) {
@@ -54,9 +51,6 @@ class SecretKey
         }
     }
 
-    /**
-     * @return self
-     */
     public static function generate(): self
     {
         return new self(
@@ -66,27 +60,16 @@ class SecretKey
         );
     }
 
-    /**
-     * @return string
-     */
     public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->secretKey);
     }
 
-    /**
-     * @param string $encodedString
-     *
-     * @return self
-     */
     public static function fromEncodedString(string $encodedString): self
     {
         return new self(Base64UrlSafe::decode($encodedString));
     }
 
-    /**
-     * @return PublicKey
-     */
     public function getPublicKey(): PublicKey
     {
         return new PublicKey(
@@ -94,9 +77,6 @@ class SecretKey
         );
     }
 
-    /**
-     * @return string
-     */
     public function raw(): string
     {
         return $this->secretKey;

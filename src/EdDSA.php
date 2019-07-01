@@ -32,35 +32,23 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 
 class EdDSA extends Jwt
 {
-    /** @var Keys\EdDSA\PublicKey */
+    /** @var \fkooman\Jwt\Keys\EdDSA\PublicKey */
     private $publicKey;
 
-    /** @var Keys\EdDSA\SecretKey|null */
+    /** @var ?\fkooman\Jwt\Keys\EdDSA\SecretKey */
     private $secretKey;
 
-    /**
-     * @param Keys\EdDSA\PublicKey      $publicKey
-     * @param Keys\EdDSA\SecretKey|null $secretKey
-     */
-    public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
+    public function __construct(PublicKey $publicKey, ?SecretKey $secretKey = null)
     {
         $this->publicKey = $publicKey;
         $this->secretKey = $secretKey;
     }
 
-    /**
-     * @return string
-     */
     protected static function getAlgorithm(): string
     {
         return 'EdDSA';
     }
 
-    /**
-     * @param string $inputStr
-     *
-     * @return string
-     */
     protected function sign(string $inputStr): string
     {
         if (null === $secretKey = $this->secretKey) {
@@ -70,12 +58,6 @@ class EdDSA extends Jwt
         return \sodium_crypto_sign_detached($inputStr, $secretKey->raw());
     }
 
-    /**
-     * @param string $inputStr
-     * @param string $signatureIn
-     *
-     * @return bool
-     */
     protected function verify(string $inputStr, string $signatureIn): bool
     {
         return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());

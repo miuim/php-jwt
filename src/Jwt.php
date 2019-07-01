@@ -26,7 +26,8 @@ declare(strict_types=1);
 
 namespace fkooman\Jwt;
 
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
@@ -36,40 +37,26 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
  */
 abstract class Jwt
 {
-    /** @var \DateTime|null */
+    /** @var ?\DateTimeInterface */
     protected $dateTime;
 
-    /** @var string|null */
+    /** @var ?string */
     protected $keyId;
 
     /**
      * Override the "DateTime" for unit testing. Do NOT use this in your
      * application.
-     *
-     * @param \DateTime $dateTime
-     *
-     * @return void
      */
-    public function setDateTime(DateTime $dateTime): void
+    public function setDateTime(DateTimeInterface $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @param string $keyId
-     *
-     * @return void
-     */
     public function setKeyId(string $keyId): void
     {
         $this->keyId = $keyId;
     }
 
-    /**
-     * @param array $jsonData
-     *
-     * @return string
-     */
     public function encode(array $jsonData): string
     {
         $headerData = [
@@ -88,11 +75,6 @@ abstract class Jwt
         return $jwtHeader.'.'.$jwtPayload.'.'.$jwtSignature;
     }
 
-    /**
-     * @param string $jwtStr
-     *
-     * @return array
-     */
     public function decode(string $jwtStr): array
     {
         $jwtParts = self::parseToken($jwtStr);
@@ -106,11 +88,6 @@ abstract class Jwt
         return $payloadData;
     }
 
-    /**
-     * @param string $jwtStr
-     *
-     * @return string|null
-     */
     public static function extractKeyId(string $jwtStr): ?string
     {
         $jwtParts = self::parseToken($jwtStr);
@@ -125,32 +102,16 @@ abstract class Jwt
         return $jwtHeaderData['kid'];
     }
 
-    /**
-     * @return string
-     */
     abstract protected static function getAlgorithm(): string;
 
-    /**
-     * @param string $inputStr
-     *
-     * @return string
-     */
     abstract protected function sign(string $inputStr): string;
 
-    /**
-     * @param string $inputStr
-     * @param string $signatureIn
-     *
-     * @return bool
-     */
     abstract protected function verify(string $inputStr, string $signatureIn): bool;
 
     /**
-     * @param string $jwtStr
-     *
      * @return array<string>
      */
-    private static function parseToken(string $jwtStr)
+    private static function parseToken(string $jwtStr): array
     {
         $jwtParts = \explode('.', $jwtStr);
         if (3 !== \count($jwtParts)) {
@@ -160,11 +121,6 @@ abstract class Jwt
         return $jwtParts;
     }
 
-    /**
-     * @param string $jwtHeaderStr
-     *
-     * @return array
-     */
     private static function validateHeader(string $jwtHeaderStr): array
     {
         $jwtHeaderData = Json::decode(Base64UrlSafe::decode($jwtHeaderStr));
@@ -183,14 +139,10 @@ abstract class Jwt
 
     /**
      * Verify the "exp" and "nbf" keys iff they are set.
-     *
-     * @param array $payloadData
-     *
-     * @return void
      */
     private function checkToken(array $payloadData): void
     {
-        $dateTime = $this->dateTime ?? new DateTime();
+        $dateTime = $this->dateTime ?? new DateTimeImmutable();
 
         // exp
         if (\array_key_exists('exp', $payloadData)) {

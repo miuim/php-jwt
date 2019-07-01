@@ -38,9 +38,6 @@ class SecretKey
     /** @var string */
     private $secretKey;
 
-    /**
-     * @param string $secretKey
-     */
     public function __construct(string $secretKey)
     {
         if (32 !== Binary::safeStrlen($secretKey)) {
@@ -49,35 +46,21 @@ class SecretKey
         $this->secretKey = $secretKey;
     }
 
-    /**
-     * @return self
-     */
     public static function generate(): self
     {
         return new self(\random_bytes(self::KEY_LENGTH_BYTES));
     }
 
-    /**
-     * @return string
-     */
     public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->secretKey);
     }
 
-    /**
-     * @param string $encodedKey
-     *
-     * @return self
-     */
     public static function fromEncodedString(string $encodedKey): self
     {
         return new self(Base64UrlSafe::decode($encodedKey));
     }
 
-    /**
-     * @return string
-     */
     public function raw(): string
     {
         return $this->secretKey;

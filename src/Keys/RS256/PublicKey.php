@@ -34,9 +34,6 @@ class PublicKey
     /** @var resource */
     private $publicKey;
 
-    /**
-     * @param string $publicKeyStr
-     */
     public function __construct(string $publicKeyStr)
     {
         if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
@@ -45,11 +42,6 @@ class PublicKey
         $this->publicKey = $publicKey;
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return self
-     */
     public static function load(string $fileName): self
     {
         $fileData = @\file_get_contents($fileName);

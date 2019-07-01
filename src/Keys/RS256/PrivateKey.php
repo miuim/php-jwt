@@ -35,9 +35,6 @@ class PrivateKey
     /** @var resource */
     private $privateKey;
 
-    /**
-     * @param string $privateKeyStr
-     */
     public function __construct(string $privateKeyStr)
     {
         if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
@@ -60,11 +57,6 @@ class PrivateKey
         $this->privateKey = $privateKey;
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return self
-     */
     public static function load(string $fileName): self
     {
         $fileData = @\file_get_contents($fileName);

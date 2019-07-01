@@ -35,9 +35,6 @@ class PublicKey
     /** @var string */
     private $publicKey;
 
-    /**
-     * @param string $publicKey
-     */
     public function __construct(string $publicKey)
     {
         if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
@@ -46,27 +43,16 @@ class PublicKey
         $this->publicKey = $publicKey;
     }
 
-    /**
-     * @return string
-     */
     public function encode(): string
     {
         return Base64UrlSafe::encodeUnpadded($this->publicKey);
     }
 
-    /**
-     * @param string $encodedString
-     *
-     * @return self
-     */
     public static function fromEncodedString(string $encodedString): self
     {
         return new self(Base64UrlSafe::decode($encodedString));
     }
 
-    /**
-     * @return string
-     */
     public function raw(): string
     {
         return $this->publicKey;
