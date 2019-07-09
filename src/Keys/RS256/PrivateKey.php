@@ -32,46 +32,46 @@ use RuntimeException;
 
 class PrivateKey
 {
-    /** @var resource */
-    private $privateKey;
+	/** @var resource */
+	private $privateKey;
 
-    public function __construct(string $privateKeyStr)
-    {
-        if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
-            throw new KeyException('invalid private key');
-        }
-        /* @var false|array<string,int|array<string,string>> */
-        if (false === $keyInfo = \openssl_pkey_get_details($privateKey)) {
-            throw new KeyException('unable to get key information');
-        }
-        if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
-            throw new KeyException('not an RSA key');
-        }
-        /** @var array<string,string> */
-        $rsaInfo = $keyInfo['rsa'];
-        // RSA key MUST be at least 2048 bits
-        // @see https://tools.ietf.org/html/rfc7518#section-4.2
-        if (256 > Binary::safeStrlen($rsaInfo['n'])) {
-            throw new KeyException('invalid RSA key, must be >= 2048 bits');
-        }
-        $this->privateKey = $privateKey;
-    }
+	public function __construct(string $privateKeyStr)
+	{
+		if (false === $privateKey = \openssl_pkey_get_private($privateKeyStr)) {
+			throw new KeyException('invalid private key');
+		}
+		/* @var false|array<string,int|array<string,string>> */
+		if (false === $keyInfo = \openssl_pkey_get_details($privateKey)) {
+			throw new KeyException('unable to get key information');
+		}
+		if (!\array_key_exists('type', $keyInfo) || OPENSSL_KEYTYPE_RSA !== $keyInfo['type']) {
+			throw new KeyException('not an RSA key');
+		}
+		/** @var array<string,string> */
+		$rsaInfo = $keyInfo['rsa'];
+		// RSA key MUST be at least 2048 bits
+		// @see https://tools.ietf.org/html/rfc7518#section-4.2
+		if (256 > Binary::safeStrlen($rsaInfo['n'])) {
+			throw new KeyException('invalid RSA key, must be >= 2048 bits');
+		}
+		$this->privateKey = $privateKey;
+	}
 
-    public static function load(string $fileName): self
-    {
-        $fileData = @\file_get_contents($fileName);
-        if (false === $fileData) {
-            throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
-        }
+	public static function load(string $fileName): self
+	{
+		$fileData = @\file_get_contents($fileName);
+		if (false === $fileData) {
+			throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
+		}
 
-        return new self($fileData);
-    }
+		return new self($fileData);
+	}
 
-    /**
-     * @return resource
-     */
-    public function raw()
-    {
-        return $this->privateKey;
-    }
+	/**
+	 * @return resource
+	 */
+	public function raw()
+	{
+		return $this->privateKey;
+	}
 }

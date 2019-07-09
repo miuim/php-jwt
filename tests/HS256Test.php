@@ -37,49 +37,49 @@ use PHPUnit\Framework\TestCase;
  */
 final class HS256Test extends TestCase
 {
-    public function testSimple(): void
-    {
-        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
-        $jwtStr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8CymvZz4_nrhKF9cO2y4yo3UmDJ30QiuidJvLlH_0Is';
-        $payloadData = [
-            'sub' => '1234567890',
-            'name' => 'John Doe',
-            'iat' => 1516239022,
-        ];
-        static::assertSame($jwtStr, $h->encode($payloadData));
-        static::assertSame(
-            $payloadData,
-            $h->decode($jwtStr)
-        );
-    }
+	public function testSimple(): void
+	{
+		$h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+		$jwtStr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8CymvZz4_nrhKF9cO2y4yo3UmDJ30QiuidJvLlH_0Is';
+		$payloadData = [
+			'sub' => '1234567890',
+			'name' => 'John Doe',
+			'iat' => 1516239022,
+		];
+		static::assertSame($jwtStr, $h->encode($payloadData));
+		static::assertSame(
+			$payloadData,
+			$h->decode($jwtStr)
+		);
+	}
 
-    public function testExtractKeyId(): void
-    {
-        static::assertSame(
-            'foo',
-            HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.hu7CYwVz0vwCiRThrkcnKBgjyN8k9IYqDzTNvNsO59w')
-        );
-    }
+	public function testExtractKeyId(): void
+	{
+		static::assertSame(
+			'foo',
+			HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.hu7CYwVz0vwCiRThrkcnKBgjyN8k9IYqDzTNvNsO59w')
+		);
+	}
 
-    public function testExtractKeyIdNoKid(): void
-    {
-        static::assertNull(
-            HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
-        );
-    }
+	public function testExtractKeyIdNoKid(): void
+	{
+		static::assertNull(
+			HS256::extractKeyId('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
+		);
+	}
 
-    public function testNoKeyId(): void
-    {
-        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
-        $jwtStr = $h->encode(['foo' => 'bar']);
-        static::assertNull(HS256::extractKeyId($jwtStr));
-    }
+	public function testNoKeyId(): void
+	{
+		$h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+		$jwtStr = $h->encode(['foo' => 'bar']);
+		static::assertNull(HS256::extractKeyId($jwtStr));
+	}
 
-    public function testManualKeyId(): void
-    {
-        $h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
-        $h->setKeyId('my_key_id');
-        $jwtStr = $h->encode(['foo' => 'bar']);
-        static::assertSame('my_key_id', HS256::extractKeyId($jwtStr));
-    }
+	public function testManualKeyId(): void
+	{
+		$h = new HS256(new SecretKey(Base64::decode('LaJlZbkRC7BBEQvnwefrlc3UJs+Z54Idq07munqE5AQ=', true)));
+		$h->setKeyId('my_key_id');
+		$jwtStr = $h->encode(['foo' => 'bar']);
+		static::assertSame('my_key_id', HS256::extractKeyId($jwtStr));
+	}
 }

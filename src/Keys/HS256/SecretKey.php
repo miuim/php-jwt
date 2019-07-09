@@ -32,37 +32,37 @@ use ParagonIE\ConstantTime\Binary;
 
 class SecretKey
 {
-    /** @var int */
-    private const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
+	/** @var int */
+	private const KEY_LENGTH_BYTES = 32; // strlen(hash('sha256', '', true))
 
-    /** @var string */
-    private $secretKey;
+	/** @var string */
+	private $secretKey;
 
-    public function __construct(string $secretKey)
-    {
-        if (32 !== Binary::safeStrlen($secretKey)) {
-            throw new KeyException('invalid key length');
-        }
-        $this->secretKey = $secretKey;
-    }
+	public function __construct(string $secretKey)
+	{
+		if (32 !== Binary::safeStrlen($secretKey)) {
+			throw new KeyException('invalid key length');
+		}
+		$this->secretKey = $secretKey;
+	}
 
-    public static function generate(): self
-    {
-        return new self(\random_bytes(self::KEY_LENGTH_BYTES));
-    }
+	public static function generate(): self
+	{
+		return new self(\random_bytes(self::KEY_LENGTH_BYTES));
+	}
 
-    public function encode(): string
-    {
-        return Base64UrlSafe::encodeUnpadded($this->secretKey);
-    }
+	public function encode(): string
+	{
+		return Base64UrlSafe::encodeUnpadded($this->secretKey);
+	}
 
-    public static function fromEncodedString(string $encodedKey): self
-    {
-        return new self(Base64UrlSafe::decode($encodedKey));
-    }
+	public static function fromEncodedString(string $encodedKey): self
+	{
+		return new self(Base64UrlSafe::decode($encodedKey));
+	}
 
-    public function raw(): string
-    {
-        return $this->secretKey;
-    }
+	public function raw(): string
+	{
+		return $this->secretKey;
+	}
 }

@@ -32,34 +32,34 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 
 class EdDSA extends Jwt
 {
-    /** @var \fkooman\Jwt\Keys\EdDSA\PublicKey */
-    private $publicKey;
+	/** @var \fkooman\Jwt\Keys\EdDSA\PublicKey */
+	private $publicKey;
 
-    /** @var ?\fkooman\Jwt\Keys\EdDSA\SecretKey */
-    private $secretKey;
+	/** @var ?\fkooman\Jwt\Keys\EdDSA\SecretKey */
+	private $secretKey;
 
-    public function __construct(PublicKey $publicKey, ?SecretKey $secretKey = null)
-    {
-        $this->publicKey = $publicKey;
-        $this->secretKey = $secretKey;
-    }
+	public function __construct(PublicKey $publicKey, ?SecretKey $secretKey = null)
+	{
+		$this->publicKey = $publicKey;
+		$this->secretKey = $secretKey;
+	}
 
-    protected static function getAlgorithm(): string
-    {
-        return 'EdDSA';
-    }
+	protected static function getAlgorithm(): string
+	{
+		return 'EdDSA';
+	}
 
-    protected function sign(string $inputStr): string
-    {
-        if (null === $secretKey = $this->secretKey) {
-            throw new JwtException('secret key not set');
-        }
+	protected function sign(string $inputStr): string
+	{
+		if (null === $secretKey = $this->secretKey) {
+			throw new JwtException('secret key not set');
+		}
 
-        return \sodium_crypto_sign_detached($inputStr, $secretKey->raw());
-    }
+		return \sodium_crypto_sign_detached($inputStr, $secretKey->raw());
+	}
 
-    protected function verify(string $inputStr, string $signatureIn): bool
-    {
-        return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());
-    }
+	protected function verify(string $inputStr, string $signatureIn): bool
+	{
+		return \sodium_crypto_sign_verify_detached($signatureIn, $inputStr, $this->publicKey->raw());
+	}
 }

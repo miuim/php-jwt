@@ -35,50 +35,50 @@ use fkooman\Jwt\Keys\RS256\PublicKey as RS256PublicKey;
 use fkooman\Jwt\RS256;
 
 try {
-    $claimList = [
-        'foo' => 'bar',
-        'exp' => \time() + 3600,    // special claim (expiry)
-    ];
+	$claimList = [
+		'foo' => 'bar',
+		'exp' => \time() + 3600,    // special claim (expiry)
+	];
 
-    // RS256
-    $r = new RS256(
-        RS256PublicKey::load(__DIR__.'/rsa.pub'),
-        RS256PrivateKey::load(__DIR__.'/rsa.key')
-    );
-    $jwtStr = $r->encode($claimList);
-    echo 'RS256: '.$jwtStr.PHP_EOL;
-    if ($claimList === $r->decode($jwtStr)) {
-        echo 'OK'.PHP_EOL;
-    }
+	// RS256
+	$r = new RS256(
+		RS256PublicKey::load(__DIR__.'/rsa.pub'),
+		RS256PrivateKey::load(__DIR__.'/rsa.key')
+	);
+	$jwtStr = $r->encode($claimList);
+	echo 'RS256: '.$jwtStr.PHP_EOL;
+	if ($claimList === $r->decode($jwtStr)) {
+		echo 'OK'.PHP_EOL;
+	}
 
-    // HS256
-    $h = new HS256(
-        HS256SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
-    );
-    $jwtStr = $h->encode($claimList);
-    echo 'HS256: '.$jwtStr.PHP_EOL;
-    if ($claimList === $h->decode($jwtStr)) {
-        echo 'OK'.PHP_EOL;
-    }
+	// HS256
+	$h = new HS256(
+		HS256SecretKey::fromEncodedString('5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps')
+	);
+	$jwtStr = $h->encode($claimList);
+	echo 'HS256: '.$jwtStr.PHP_EOL;
+	if ($claimList === $h->decode($jwtStr)) {
+		echo 'OK'.PHP_EOL;
+	}
 
-    // EdDSA
-    $secretKey = EdDSASecretKey::fromEncodedString('yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg');
-    $h = new EdDSA(
-        $secretKey->getPublicKey(),
-        $secretKey
-    );
-    // set "kid" JWT header
-    $h->setKeyId('my_key_id');
-    $jwtStr = $h->encode($claimList);
-    echo 'EdDSA: '.$jwtStr.PHP_EOL;
-    // extract "kid" from JWT header
-    $keyId = EdDSA::extractKeyId($jwtStr);
-    if (null !== $keyId) {
-        echo 'Key ID: '.$keyId.PHP_EOL;
-    }
-    if ($claimList === $h->decode($jwtStr)) {
-        echo 'OK'.PHP_EOL;
-    }
+	// EdDSA
+	$secretKey = EdDSASecretKey::fromEncodedString('yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg');
+	$h = new EdDSA(
+		$secretKey->getPublicKey(),
+		$secretKey
+	);
+	// set "kid" JWT header
+	$h->setKeyId('my_key_id');
+	$jwtStr = $h->encode($claimList);
+	echo 'EdDSA: '.$jwtStr.PHP_EOL;
+	// extract "kid" from JWT header
+	$keyId = EdDSA::extractKeyId($jwtStr);
+	if (null !== $keyId) {
+		echo 'Key ID: '.$keyId.PHP_EOL;
+	}
+	if ($claimList === $h->decode($jwtStr)) {
+		echo 'OK'.PHP_EOL;
+	}
 } catch (Exception $e) {
-    echo 'ERROR: '.$e->getMessage().PHP_EOL;
+	echo 'ERROR: '.$e->getMessage().PHP_EOL;
 }

@@ -31,54 +31,54 @@ use ParagonIE\ConstantTime\Binary;
 
 class SecretKey
 {
-    /** @var string */
-    private $secretKey;
+	/** @var string */
+	private $secretKey;
 
-    public function __construct(string $secretKey)
-    {
-        switch (Binary::safeStrlen($secretKey)) {
-            case SODIUM_CRYPTO_SIGN_SECRETKEYBYTES:
-                $this->secretKey = $secretKey;
-                break;
-            case SODIUM_CRYPTO_SIGN_SEEDBYTES:
-                $this->secretKey = Binary::safeSubstr(\sodium_crypto_sign_seed_keypair($secretKey), 0, 64);
-                break;
-            case SODIUM_CRYPTO_SIGN_KEYPAIRBYTES:
-                $this->secretKey = Binary::safeSubstr($secretKey, 0, 64);
-                break;
-            default:
-                throw new \LengthException('invalid secret key length');
-        }
-    }
+	public function __construct(string $secretKey)
+	{
+		switch (Binary::safeStrlen($secretKey)) {
+			case SODIUM_CRYPTO_SIGN_SECRETKEYBYTES:
+				$this->secretKey = $secretKey;
+				break;
+			case SODIUM_CRYPTO_SIGN_SEEDBYTES:
+				$this->secretKey = Binary::safeSubstr(\sodium_crypto_sign_seed_keypair($secretKey), 0, 64);
+				break;
+			case SODIUM_CRYPTO_SIGN_KEYPAIRBYTES:
+				$this->secretKey = Binary::safeSubstr($secretKey, 0, 64);
+				break;
+			default:
+				throw new \LengthException('invalid secret key length');
+		}
+	}
 
-    public static function generate(): self
-    {
-        return new self(
-            \sodium_crypto_sign_secretkey(
-                \sodium_crypto_sign_keypair()
-            )
-        );
-    }
+	public static function generate(): self
+	{
+		return new self(
+			\sodium_crypto_sign_secretkey(
+				\sodium_crypto_sign_keypair()
+			)
+		);
+	}
 
-    public function encode(): string
-    {
-        return Base64UrlSafe::encodeUnpadded($this->secretKey);
-    }
+	public function encode(): string
+	{
+		return Base64UrlSafe::encodeUnpadded($this->secretKey);
+	}
 
-    public static function fromEncodedString(string $encodedString): self
-    {
-        return new self(Base64UrlSafe::decode($encodedString));
-    }
+	public static function fromEncodedString(string $encodedString): self
+	{
+		return new self(Base64UrlSafe::decode($encodedString));
+	}
 
-    public function getPublicKey(): PublicKey
-    {
-        return new PublicKey(
-            \sodium_crypto_sign_publickey_from_secretkey($this->secretKey)
-        );
-    }
+	public function getPublicKey(): PublicKey
+	{
+		return new PublicKey(
+			\sodium_crypto_sign_publickey_from_secretkey($this->secretKey)
+		);
+	}
 
-    public function raw(): string
-    {
-        return $this->secretKey;
-    }
+	public function raw(): string
+	{
+		return $this->secretKey;
+	}
 }

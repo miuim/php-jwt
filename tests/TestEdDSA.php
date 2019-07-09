@@ -35,24 +35,24 @@ use fkooman\Jwt\EdDSA;
  */
 class TestEdDSA extends EdDSA
 {
-    /**
-     * @param string $inputStr
-     *
-     * @return string
-     */
-    public function sign(string $inputStr): string
-    {
-        return parent::sign($inputStr);
-    }
+	/**
+	 * @param string $inputStr
+	 *
+	 * @return string
+	 */
+	public function sign(string $inputStr): string
+	{
+		return parent::sign($inputStr);
+	}
 
-    /**
-     * @param string $inputStr
-     * @param string $signatureIn
-     *
-     * @return bool
-     */
-    public function verify(string $inputStr, string $signatureIn): bool
-    {
-        return parent::verify($inputStr, $signatureIn);
-    }
+	/**
+	 * @param string $inputStr
+	 * @param string $signatureIn
+	 *
+	 * @return bool
+	 */
+	public function verify(string $inputStr, string $signatureIn): bool
+	{
+		return parent::verify($inputStr, $signatureIn);
+	}
 }

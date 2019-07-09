@@ -35,13 +35,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class SecretKeyTest extends TestCase
 {
-    public function testGenerate(): void
-    {
-        $secretKey = SecretKey::generate();
-        $encodedKey = $secretKey->encode();
-        static::assertSame(
-            $encodedKey,
-            SecretKey::fromEncodedString($encodedKey)->encode()
-        );
-    }
+	public function testGenerate(): void
+	{
+		$secretKey = SecretKey::generate();
+		$encodedKey = $secretKey->encode();
+		static::assertSame(
+			$encodedKey,
+			SecretKey::fromEncodedString($encodedKey)->encode()
+		);
+	}
 }

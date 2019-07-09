@@ -32,29 +32,29 @@ use ParagonIE\ConstantTime\Binary;
 
 class PublicKey
 {
-    /** @var string */
-    private $publicKey;
+	/** @var string */
+	private $publicKey;
 
-    public function __construct(string $publicKey)
-    {
-        if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
-            throw new LengthException('invalid public key length');
-        }
-        $this->publicKey = $publicKey;
-    }
+	public function __construct(string $publicKey)
+	{
+		if (SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES !== Binary::safeStrlen($publicKey)) {
+			throw new LengthException('invalid public key length');
+		}
+		$this->publicKey = $publicKey;
+	}
 
-    public function encode(): string
-    {
-        return Base64UrlSafe::encodeUnpadded($this->publicKey);
-    }
+	public function encode(): string
+	{
+		return Base64UrlSafe::encodeUnpadded($this->publicKey);
+	}
 
-    public static function fromEncodedString(string $encodedString): self
-    {
-        return new self(Base64UrlSafe::decode($encodedString));
-    }
+	public static function fromEncodedString(string $encodedString): self
+	{
+		return new self(Base64UrlSafe::decode($encodedString));
+	}
 
-    public function raw(): string
-    {
-        return $this->publicKey;
-    }
+	public function raw(): string
+	{
+		return $this->publicKey;
+	}
 }

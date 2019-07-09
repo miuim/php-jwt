@@ -30,31 +30,31 @@ use fkooman\Jwt\Exception\JsonException;
 
 class Json
 {
-    public static function encode(array $jsonData): string
-    {
-        $jsonString = \json_encode($jsonData);
-        if (false === $jsonString) {
-            throw new JsonException(
-                \sprintf('unable to encode JSON: "%s"', \json_last_error_msg())
-            );
-        }
+	public static function encode(array $jsonData): string
+	{
+		$jsonString = \json_encode($jsonData);
+		if (false === $jsonString) {
+			throw new JsonException(
+				\sprintf('unable to encode JSON: "%s"', \json_last_error_msg())
+			);
+		}
 
-        return $jsonString;
-    }
+		return $jsonString;
+	}
 
-    public static function decode(string $jsonString): array
-    {
-        $jsonData = \json_decode($jsonString, true);
-        if (null === $jsonData && JSON_ERROR_NONE !== \json_last_error()) {
-            throw new JsonException(
-                \sprintf('unable to decode JSON: "%s"', \json_last_error_msg())
-            );
-        }
+	public static function decode(string $jsonString): array
+	{
+		$jsonData = \json_decode($jsonString, true);
+		if (null === $jsonData && JSON_ERROR_NONE !== \json_last_error()) {
+			throw new JsonException(
+				\sprintf('unable to decode JSON: "%s"', \json_last_error_msg())
+			);
+		}
 
-        if (!\is_array($jsonData)) {
-            throw new JsonException('not a JSON object');
-        }
+		if (!\is_array($jsonData)) {
+			throw new JsonException('not a JSON object');
+		}
 
-        return $jsonData;
-    }
+		return $jsonData;
+	}
 }

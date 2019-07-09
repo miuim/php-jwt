@@ -33,51 +33,51 @@ use RuntimeException;
 
 class RS256 extends Jwt
 {
-    /** @var \fkooman\Jwt\Keys\RS256\PublicKey */
-    private $publicKey;
+	/** @var \fkooman\Jwt\Keys\RS256\PublicKey */
+	private $publicKey;
 
-    /** @var ?\fkooman\Jwt\Keys\RS256\PrivateKey */
-    private $privateKey;
+	/** @var ?\fkooman\Jwt\Keys\RS256\PrivateKey */
+	private $privateKey;
 
-    public function __construct(PublicKey $publicKey, ?PrivateKey $privateKey = null)
-    {
-        $this->publicKey = $publicKey;
-        $this->privateKey = $privateKey;
-    }
+	public function __construct(PublicKey $publicKey, ?PrivateKey $privateKey = null)
+	{
+		$this->publicKey = $publicKey;
+		$this->privateKey = $privateKey;
+	}
 
-    protected static function getAlgorithm(): string
-    {
-        return 'RS256';
-    }
+	protected static function getAlgorithm(): string
+	{
+		return 'RS256';
+	}
 
-    protected function sign(string $inputStr): string
-    {
-        if (null === $privateKey = $this->privateKey) {
-            throw new JwtException('private key not set');
-        }
-        $signatureOut = '';
-        if (false === \openssl_sign($inputStr, $signatureOut, $privateKey->raw(), OPENSSL_ALGO_SHA256)) {
-            throw new RuntimeException('OpenSSL: unable to sign');
-        }
+	protected function sign(string $inputStr): string
+	{
+		if (null === $privateKey = $this->privateKey) {
+			throw new JwtException('private key not set');
+		}
+		$signatureOut = '';
+		if (false === \openssl_sign($inputStr, $signatureOut, $privateKey->raw(), OPENSSL_ALGO_SHA256)) {
+			throw new RuntimeException('OpenSSL: unable to sign');
+		}
 
-        return $signatureOut;
-    }
+		return $signatureOut;
+	}
 
-    protected function verify(string $inputStr, string $signatureIn): bool
-    {
-        $verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);
-        if (1 === $verifyResult) {
-            return true;
-        }
-        if (0 === $verifyResult) {
-            return false;
-        }
+	protected function verify(string $inputStr, string $signatureIn): bool
+	{
+		$verifyResult = \openssl_verify($inputStr, $signatureIn, $this->publicKey->raw(), OPENSSL_ALGO_SHA256);
+		if (1 === $verifyResult) {
+			return true;
+		}
+		if (0 === $verifyResult) {
+			return false;
+		}
 
-        $errorMsg = 'OpenSSL: ';
-        while (false !== $errorString = \openssl_error_string()) {
-            $errorMsg .= $errorString;
-        }
+		$errorMsg = 'OpenSSL: ';
+		while (false !== $errorString = \openssl_error_string()) {
+			$errorMsg .= $errorString;
+		}
 
-        throw new RuntimeException($errorMsg);
-    }
+		throw new RuntimeException($errorMsg);
+	}
 }

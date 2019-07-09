@@ -30,26 +30,26 @@ use fkooman\Jwt\Keys\HS256\SecretKey;
 
 class HS256 extends Jwt
 {
-    /** @var \fkooman\Jwt\Keys\HS256\SecretKey */
-    private $secretKey;
+	/** @var \fkooman\Jwt\Keys\HS256\SecretKey */
+	private $secretKey;
 
-    public function __construct(SecretKey $secretKey)
-    {
-        $this->secretKey = $secretKey;
-    }
+	public function __construct(SecretKey $secretKey)
+	{
+		$this->secretKey = $secretKey;
+	}
 
-    protected static function getAlgorithm(): string
-    {
-        return 'HS256';
-    }
+	protected static function getAlgorithm(): string
+	{
+		return 'HS256';
+	}
 
-    protected function sign(string $inputStr): string
-    {
-        return \hash_hmac('sha256', $inputStr, $this->secretKey->raw(), true);
-    }
+	protected function sign(string $inputStr): string
+	{
+		return \hash_hmac('sha256', $inputStr, $this->secretKey->raw(), true);
+	}
 
-    protected function verify(string $inputStr, string $signatureIn): bool
-    {
-        return \hash_equals(self::sign($inputStr), $signatureIn);
-    }
+	protected function verify(string $inputStr, string $signatureIn): bool
+	{
+		return \hash_equals(self::sign($inputStr), $signatureIn);
+	}
 }

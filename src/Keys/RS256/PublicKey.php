@@ -31,32 +31,32 @@ use RuntimeException;
 
 class PublicKey
 {
-    /** @var resource */
-    private $publicKey;
+	/** @var resource */
+	private $publicKey;
 
-    public function __construct(string $publicKeyStr)
-    {
-        if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
-            throw new KeyException('invalid public key');
-        }
-        $this->publicKey = $publicKey;
-    }
+	public function __construct(string $publicKeyStr)
+	{
+		if (false === $publicKey = \openssl_pkey_get_public($publicKeyStr)) {
+			throw new KeyException('invalid public key');
+		}
+		$this->publicKey = $publicKey;
+	}
 
-    public static function load(string $fileName): self
-    {
-        $fileData = @\file_get_contents($fileName);
-        if (false === $fileData) {
-            throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
-        }
+	public static function load(string $fileName): self
+	{
+		$fileData = @\file_get_contents($fileName);
+		if (false === $fileData) {
+			throw new RuntimeException(\sprintf('unable to read key file "%s"', $fileName));
+		}
 
-        return new self($fileData);
-    }
+		return new self($fileData);
+	}
 
-    /**
-     * @return resource
-     */
-    public function raw()
-    {
-        return $this->publicKey;
-    }
+	/**
+	 * @return resource
+	 */
+	public function raw()
+	{
+		return $this->publicKey;
+	}
 }
