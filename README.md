@@ -81,44 +81,10 @@ You can also download the signed source code archive
 
 # Keys
 
-Below we show how to generate keys for the various JWT algorithms. Do NOT use
-any other way unless you know what you are doing!
+See the API examples below on how to generate keys for `EdDSA` and `HS256`. Do
+NOT use any other way unless you know what you are doing!
 
-## HS256 (HMAC)
-
-As this is a HMAC, there is only one key both for signing and verifying the 
-JWT.
-
-```php
-<?php
-
-// generating and saving a key
-$secretKey = \fkooman\Jwt\Keys\HS256\SecretKey::generate();
-$encodedString = $secretKey->encode();
-
-// loading a key
-$secretKey = \fkooman\Jwt\Keys\HS256\SecretKey::fromEncodedString($encodedString);
-```
-
-## EdDSA (Ed25519)
-
-```php
-<?php
-
-// generating and saving a key
-$secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::generate();
-$encodedString = $secretKey->encode();
-
-// loading a key
-$secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::fromEncodedString($encodedString);
-```
-
-The public key can be obtained from the secret key by calling the 
-`getPublicKey` method on the `SecretKey` object.
-
-## RS256 (RSA)
-
-Use the `openssl` command line to generate they public and private key:
+For `RS256` we use OpenSSL directly to generate a private and public key:
 
 ```bash
 $ openssl genrsa --out rsa.key 2048
@@ -139,62 +105,8 @@ $ openssl rsa -pubin -in rsa.pub -noout -text
 
 # API
 
-This section describes how to use the various JWT types.
-
-## HS256
-
-```php
-<?php
-
-$h = new \fkooman\Jwt\HS256(
-    \fkooman\Jwt\Keys\HS256\SecretKey::fromEncodedString(
-        '5SBq2gMQFsy6ToGH0SS8CLFPCGxxFl8uohZUooCq5ps'
-    )
-);
-$jwtStr = $h->encode(['foo' => 'bar']);
-var_dump($h->decode($jwtStr));
-```
-
-## EdDSA (Ed25519)
-
-```php
-<?php
-
-$secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::fromEncodedString(
-    'yvo12M7L4puipaUwuuDz_1SMDLz7VPcgcny-OkOHnIEamcDtjH31m6Xlw6a9Ib5dp5A-vHMdzIhUQxUMreqxPg'
-);
-$publicKey = $secretKey->getPublicKey();
-
-$r = new \fkooman\Jwt\EdDSA(
-    $publicKey,
-    $secretKey
-);
-$jwtStr = $r->encode(['foo' => 'bar']);
-var_dump($r->decode($jwtStr));
-```
-
-The `SecretKey` parameter is optional. Do not specify it if you only want to
-verify JWTs. Of course, you need to specify it when you want to sign a JWT.
-
-## RS256
-
-```php
-<?php
-
-$r = new \fkooman\Jwt\RS256(
-    \fkooman\Jwt\Keys\RS256\PublicKey::load('rsa.pub'),
-    \fkooman\Jwt\Keys\RS256\PrivateKey::load('rsa.key')
-);
-$jwtStr = $r->encode(['foo' => 'bar']);
-var_dump($r->decode($jwtStr));
-```
-
-The `PrivateKey` parameter is optional. Do not specify it if you only want to
-verify JWTs. Of course, you need to specify it when you want to sign JWTs.
-
-# Example
-
-See the `example/` directory for a working example.
+See the `example/` directory for working examples on how to generate keys, 
+set the Key ID and create and validate JWT tokens.
 
 # Testing
 
