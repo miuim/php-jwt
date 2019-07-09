@@ -12,6 +12,14 @@ library does _NOT_ support encryption/decryption due to the can of worms that
 would open. It _MAY_ support encryption/decryption in the future, but not with
 RSA.
 
+**NOTE**: The `HS256` algorithm uses a single secret key. Only use this when 
+your application is both the issuer and verifier of a JWT.
+
+**NOTE**: do [NOT](https://blog.trailofbits.com/2019/07/08/fuck-rsa/) use RSA 
+for new systems as a general rule, only use `HS256` and `EdDSA` for new systems 
+and use RSA as a last resort for interoperability with existing systems that 
+did not yet move to newer algorithms.
+
 # Why?
 
 Quite a number of JWT implementations exist for PHP, varying in quality. 
@@ -76,27 +84,6 @@ You can also download the signed source code archive
 Below we show how to generate keys for the various JWT algorithms. Do NOT use
 any other way unless you know what you are doing!
 
-## RS256 (RSA)
-
-Use the `openssl` command line to generate they public and private key:
-
-```bash
-$ openssl genrsa --out rsa.key 2048
-$ openssl rsa -in rsa.key -pubout -out rsa.pub
-```
-
-The RSA key MUST have 
-[at least](https://tools.ietf.org/html/rfc7518#section-4.2) 2048 bits. The 
-above command will generate a private key in `rsa.key` and the public key in 
-`rsa.pub`. Those files can be used with the `PublicKey` and `PrivateKey` key 
-wrapping classes.
-
-To inspect a public key:
-
-```bash
-$ openssl rsa -pubin -in rsa.pub -noout -text
-```
-
 ## HS256 (HMAC)
 
 As this is a HMAC, there is only one key both for signing and verifying the 
@@ -129,25 +116,30 @@ $secretKey = \fkooman\Jwt\Keys\EdDSA\SecretKey::fromEncodedString($encodedString
 The public key can be obtained from the secret key by calling the 
 `getPublicKey` method on the `SecretKey` object.
 
+## RS256 (RSA)
+
+Use the `openssl` command line to generate they public and private key:
+
+```bash
+$ openssl genrsa --out rsa.key 2048
+$ openssl rsa -in rsa.key -pubout -out rsa.pub
+```
+
+The RSA key MUST have 
+[at least](https://tools.ietf.org/html/rfc7518#section-4.2) 2048 bits. The 
+above command will generate a private key in `rsa.key` and the public key in 
+`rsa.pub`. Those files can be used with the `PublicKey` and `PrivateKey` key 
+wrapping classes.
+
+To inspect a public key:
+
+```bash
+$ openssl rsa -pubin -in rsa.pub -noout -text
+```
+
 # API
 
 This section describes how to use the various JWT types.
-
-## RS256
-
-```php
-<?php
-
-$r = new \fkooman\Jwt\RS256(
-    \fkooman\Jwt\Keys\RS256\PublicKey::load('rsa.pub'),
-    \fkooman\Jwt\Keys\RS256\PrivateKey::load('rsa.key')
-);
-$jwtStr = $r->encode(['foo' => 'bar']);
-var_dump($r->decode($jwtStr));
-```
-
-The `PrivateKey` parameter is optional. Do not specify it if you only want to
-verify JWTs. Of course, you need to specify it when you want to sign JWTs.
 
 ## HS256
 
@@ -183,6 +175,22 @@ var_dump($r->decode($jwtStr));
 
 The `SecretKey` parameter is optional. Do not specify it if you only want to
 verify JWTs. Of course, you need to specify it when you want to sign a JWT.
+
+## RS256
+
+```php
+<?php
+
+$r = new \fkooman\Jwt\RS256(
+    \fkooman\Jwt\Keys\RS256\PublicKey::load('rsa.pub'),
+    \fkooman\Jwt\Keys\RS256\PrivateKey::load('rsa.key')
+);
+$jwtStr = $r->encode(['foo' => 'bar']);
+var_dump($r->decode($jwtStr));
+```
+
+The `PrivateKey` parameter is optional. Do not specify it if you only want to
+verify JWTs. Of course, you need to specify it when you want to sign JWTs.
 
 # Example
 

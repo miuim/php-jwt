@@ -6,6 +6,7 @@
 - add verify benchmarks
 - better way to expose algorithm from the subclasses
 - add Phan static type checking configuration file
+- require `php-sodium`
 
 ## 1.0.0 (2019-03-06)
 - remove redundant type checks
