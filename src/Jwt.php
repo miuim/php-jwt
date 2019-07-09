@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace fkooman\Jwt;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use fkooman\Jwt\Exception\JwtException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
@@ -37,7 +36,7 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
  */
 abstract class Jwt
 {
-	/** @var ?\DateTimeInterface */
+	/** @var ?\DateTimeImmutable */
 	protected $dateTime;
 
 	/** @var ?string */
@@ -47,7 +46,7 @@ abstract class Jwt
 	 * Override the "DateTime" for unit testing. Do NOT use this in your
 	 * application.
 	 */
-	public function setDateTime(DateTimeInterface $dateTime): void
+	public function setDateTime(DateTimeImmutable $dateTime): void
 	{
 		$this->dateTime = $dateTime;
 	}
