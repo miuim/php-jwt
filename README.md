@@ -9,16 +9,15 @@ the following signature algorithms:
 
 The first two seem to be the most widely deployed JWT signature algorithms. The
 library does _NOT_ support encryption/decryption due to the can of worms that
-would open. It _MAY_ support encryption/decryption in the future, but not with
-RSA.
+would open. It _MAY_ support encryption/decryption in the future, but 
+definitely not with RSA.
 
-**NOTE**: The `HS256` algorithm uses a single secret key. Only use this when 
-your application is both the issuer and verifier of a JWT.
+# Which Algorithm to Use?
 
-**NOTE**: do [NOT](https://blog.trailofbits.com/2019/07/08/fuck-rsa/) use RSA 
-for new systems as a general rule, only use `HS256` and `EdDSA` for new systems 
-and use RSA as a last resort for interoperability with existing systems that 
-did not yet move to newer algorithms.
+If you are both the signer and the verifier of the JWT use `HS256`. If you 
+issue JWTs that have to be verified by third parties (as well), use `EdDSA`. Do
+[NOT](https://blog.trailofbits.com/2019/07/08/fuck-rsa/) use `RS256` if you can 
+help it.
 
 # Why?
 
@@ -44,10 +43,10 @@ supporting every nook and cranny of the specification.
 
 # Versions 
 
-| Version | PHP    | OS                  |
-|---------|--------|---------------------|
-| 1.x     | >= 5.4 | CentOS 7, Debian 9  |
-| 2.x     | >= 7.2 | CentOS 8, Debian 10 |
+| Version | PHP    | OS                                |
+|---------|--------|-----------------------------------|
+| 1.x     | >= 5.4 | CentOS >= 7 (+EPEL), Debian >= 9  |
+| 2.x     | >= 7.2 | CentOS >= 8 (+EPEL), Debian >= 10 |
 
 # Requirements
 
@@ -58,7 +57,7 @@ supporting every nook and cranny of the specification.
 
 Only `paragonie/constant_time_encoding` is a dependency.
 
-## Use
+# Installation
 
 Currently php-jwt is not hosted on [Packagist](https://packagist.org/). It may
 be added in the future. In your `composer.json`:
@@ -78,30 +77,6 @@ be added in the future. In your `composer.json`:
 
 You can also download the signed source code archive 
 [here](https://software.tuxed.net/php-jwt/download.html).
-
-# Keys
-
-See the API examples below on how to generate keys for `EdDSA` and `HS256`. Do
-NOT use any other way unless you know what you are doing!
-
-For `RS256` we use OpenSSL directly to generate a private and public key:
-
-```bash
-$ openssl genrsa --out rsa.key 2048
-$ openssl rsa -in rsa.key -pubout -out rsa.pub
-```
-
-The RSA key MUST have 
-[at least](https://tools.ietf.org/html/rfc7518#section-4.2) 2048 bits. The 
-above command will generate a private key in `rsa.key` and the public key in 
-`rsa.pub`. Those files can be used with the `PublicKey` and `PrivateKey` key 
-wrapping classes.
-
-To inspect a public key:
-
-```bash
-$ openssl rsa -pubin -in rsa.pub -noout -text
-```
 
 # API
 

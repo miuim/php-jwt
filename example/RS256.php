@@ -24,6 +24,20 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
+/*
+ * Generate a key pair:
+ *
+ * $ openssl genrsa --out rsa.key 2048
+ * $ openssl rsa -in rsa.key -pubout -out rsa.pub
+ *
+ * When signing a RS256 token, the key MUST be >= 2048 bits.
+ *
+ * To inspect a public key:
+ *
+ * $ openssl rsa -pubin -in rsa.pub -noout -text
+ *
+ */
+
 require_once \dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Jwt\Keys\RS256\PrivateKey;
