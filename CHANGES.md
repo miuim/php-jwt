@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 2.0.0 (...)
+## 2.0.0 (2019-08-05)
 - require PHP >= 7.2
 - enable strict types
 - add verify benchmarks
