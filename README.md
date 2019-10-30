@@ -1,5 +1,16 @@
 # Introduction
 
+
+This project is forked from [fkooman/php-jwt](https://git.tuxed.net/fkooman/php-jwt/).
+
+Then I changed the algorithm of `EdDSA` to `Ed25519` in `src\EdDSA.php` file.
+
+That's all.
+
+The following is original readme.
+
+----
+
 This is small JSON Web Token implementation. It only supports signatures with 
 the following signature algorithms:
 

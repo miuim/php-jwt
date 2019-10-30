@@ -46,7 +46,7 @@ class EdDSA extends Jwt
 
 	protected static function getAlgorithm(): string
 	{
-		return 'EdDSA';
+		return 'Ed25519';
 	}
 
 	protected function sign(string $inputStr): string
