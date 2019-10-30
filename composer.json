@@ -17,7 +17,7 @@
     },
     "description": "Simple and Secure JWT Signer/Verifier",
     "license": "MIT",
-    "name": "fkooman/jwt",
+    "name": "miuim/php-jwt",
     "require": {
         "ext-date": "*",
         "ext-hash": "*",
